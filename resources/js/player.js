@@ -1,10 +1,9 @@
 ENGINE.namespace('ENGINE.PLAYER');
 
-(function(global) {
+(function() {
+  "use strict";
 
   ENGINE.PLAYER = (function() {
-
-    var hidden = '23';
 
     this.Player = Player;
 
@@ -18,4 +17,4 @@ ENGINE.namespace('ENGINE.PLAYER');
 
   }).call(ENGINE.PLAYER);
 
-})(this);
+})();

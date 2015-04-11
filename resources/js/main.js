@@ -1,4 +1,5 @@
 (function() {
+  "use strict";
 
   var Player = ENGINE.PLAYER.Player;
 

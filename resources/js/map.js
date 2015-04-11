@@ -1,10 +1,9 @@
 ENGINE.namespace('ENGINE.MAP');
 
-(function(global) {
+(function() {
+  "use strict";
 
   ENGINE.MAP = (function() {
-
-    var hidden = '24';
 
     this.Map = Map;
 
@@ -17,4 +16,4 @@ ENGINE.namespace('ENGINE.MAP');
 
   }).call(ENGINE.MAP);
 
-})(this);
+})();
