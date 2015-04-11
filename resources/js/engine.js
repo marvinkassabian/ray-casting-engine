@@ -1,24 +1,32 @@
-(function() {
+(function(global) {
 
-  var Engine = (function() {
+  var ENGINE = (function() {
 
-    this.Player = Player;
-    this.Map = Map;
+    this.namespace = namespace;
 
     return this;
 
-    function Player(x, y, direction) {
-      this.x = x;
-      this.y = y;
-      this.direction = direction;
+    // ENGINE.namespace taken from YUI.namespace
+    function namespace() {
+      var a = arguments;
+      var o = null;
+      var i, j, d;
+
+      for (i = 0; i < a.length; i = i + 1) {
+        d = a[i].split('.');
+        o = ENGINE;
+
+        // ENGINE is implied, so it is ignored if it is included
+        for (j = (d[0] == 'ENGINE') ? 1 : 0; j < d.length; j = j + 1) {
+          o[d[j]] = o[d[j]] || {};
+          o = o[d[j]];
+        }
+      }
+
+      return o;
     }
 
-    function Map(size) {
-      this.size = size;
-      this.wallGrid = new Uint8Array(size * size);
-    }
+  }).call(ENGINE || {});
 
-  }).call(Engine || {});
-
-  window.Engine = Engine;
-})();
+  global.ENGINE = ENGINE;
+})(this);
