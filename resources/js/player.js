@@ -3,11 +3,11 @@
 
   ENGINE.namespace('ENGINE.PLAYER');
 
-  ENGINE.PLAYER = (function() {
+  ENGINE.PLAYER = (function(module) {
 
-    this.Player = Player;
+    module.Player = Player;
 
-    return this;
+    return module;
 
     function Player(x, y, direction) {
       this.x = x;
@@ -15,6 +15,6 @@
       this.direction = direction;
     }
 
-  }).call(ENGINE.PLAYER);
+  })(ENGINE.PLAYER);
 
 })();

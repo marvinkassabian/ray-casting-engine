@@ -3,15 +3,15 @@
 
   ENGINE.namespace('ENGINE.GAMELOOP');
 
-  ENGINE.GAMELOOP = (function() {
+  ENGINE.GAMELOOP = (function(module) {
 
-    this.GameLoop = GameLoop;
+    module.GameLoop = GameLoop;
 
-    return this;
+    return module;
 
     function GameLoop() {
     }
 
-  }).call(ENGINE.GAMELOOP);
+  })(ENGINE.GAMELOOP);
 
 })();

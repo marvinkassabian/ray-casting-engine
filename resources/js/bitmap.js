@@ -3,11 +3,11 @@
 
   ENGINE.namespace('ENGINE.BITMAP');
 
-  ENGINE.BITMAP = (function() {
+  ENGINE.BITMAP = (function(module) {
 
-    this.BitMap = BitMap;
+    module.BitMap = BitMap;
 
-    return this;
+    return module;
 
     function BitMap(src, width, height) {
       this.image = new Image();
@@ -16,6 +16,6 @@
       this.height = height;
     }
 
-  }).call(ENGINE.BITMAP);
+  })(ENGINE.BITMAP);
 
 })();

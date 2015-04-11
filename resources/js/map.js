@@ -3,17 +3,17 @@
 
   ENGINE.namespace('ENGINE.MAP');
 
-  ENGINE.MAP = (function() {
+  ENGINE.MAP = (function(module) {
 
-    this.Map = Map;
+    module.Map = Map;
 
-    return this;
+    return module;
 
     function Map(size) {
       this.size = size;
       this.wallGrid = new Uint8Array(size * size);
     }
 
-  }).call(ENGINE.MAP);
+  })(ENGINE.MAP);
 
 })();

@@ -3,15 +3,15 @@
 
   ENGINE.namespace('ENGINE.CONTROLS');
 
-  ENGINE.CONTROLS = (function() {
+  ENGINE.CONTROLS = (function(module) {
 
-    this.Controls = Controls;
+    module.Controls = Controls;
 
-    return this;
+    return module;
 
     function Controls() {
     }
 
-  }).call(ENGINE.CONTROLS);
+  })(ENGINE.CONTROLS);
 
 })();

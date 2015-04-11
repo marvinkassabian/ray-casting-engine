@@ -3,15 +3,15 @@
 
   ENGINE.namespace('ENGINE.CAMERA');
 
-  ENGINE.CAMERA = (function() {
+  ENGINE.CAMERA = (function(module) {
 
-    this.Camera = Camera;
+    module.Camera = Camera;
 
-    return this;
+    return module;
 
     function Camera() {
     }
 
-  }).call(ENGINE.CAMERA);
+  })(ENGINE.CAMERA);
 
 })();
