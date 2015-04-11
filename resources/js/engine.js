@@ -1,16 +1,24 @@
-var Engine = (function(Engine) {
+(function() {
 
-  Engine.Player = function(x, y, direction) {
-    this.x = x;
-    this.y = y;
-    this.direction = direction;
-  };
+  var Engine = (function() {
 
-  Engine.Map = function(size) {
-    this.size = size;
-    this.wallGrid = new Uint8Array(size * size);
-  };
+    this.Player = Player;
+    this.Map = Map;
 
-  return Engine;
+    return this;
 
-}(Engine || {}));
+    function Player(x, y, direction) {
+      this.x = x;
+      this.y = y;
+      this.direction = direction;
+    }
+
+    function Map(size) {
+      this.size = size;
+      this.wallGrid = new Uint8Array(size * size);
+    }
+
+  }).call(Engine || {});
+
+  window.Engine = Engine;
+})();
