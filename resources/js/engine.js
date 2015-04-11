@@ -18,7 +18,7 @@
         o = ENGINE;
 
         // ENGINE is implied, so it is ignored if it is included
-        for (j = (d[0] == 'ENGINE') ? 1 : 0; j < d.length; j = j + 1) {
+        for (j = (d[0] === 'ENGINE') ? 1 : 0; j < d.length; j = j + 1) {
           o[d[j]] = o[d[j]] || {};
           o = o[d[j]];
         }
