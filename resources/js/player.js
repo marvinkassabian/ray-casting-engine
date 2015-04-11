@@ -1,7 +1,7 @@
-ENGINE.namespace('ENGINE.PLAYER');
-
 (function() {
   "use strict";
+
+  ENGINE.namespace('ENGINE.PLAYER');
 
   ENGINE.PLAYER = (function() {
 

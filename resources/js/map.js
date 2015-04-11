@@ -1,7 +1,7 @@
-ENGINE.namespace('ENGINE.MAP');
-
 (function() {
   "use strict";
+
+  ENGINE.namespace('ENGINE.MAP');
 
   ENGINE.MAP = (function() {
 
