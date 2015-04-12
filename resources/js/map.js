@@ -5,6 +5,8 @@
 
   ENGINE.MAP = (function(module) {
 
+    var Bitmap = ENGINE.BITMAP.Bitmap;
+
     var noWall = {
       length: Infinity
     };
@@ -67,6 +69,11 @@
     function Map(size) {
       this.size = size;
       this.wallGrid = new Uint8Array(size * size);
+      this.skybox = new Bitmap('resources/images/sky_texture.png',
+          200, 200);
+      this.wallTexture = new Bitmap('resources/images/wall_texture.png',
+          256, 256);
+      this.light = 0;
     }
 
     Map.prototype.get = function(x, y) {
@@ -100,6 +107,12 @@
 
       return ray(origin, sin, cos, range, self);
     };
+
+    Map.prototype.update = function(seconds) {
+        if (this.light > 0) {
+          this.light = Math.max(this.light - 10 * seconds, 0);
+        }
+      };
 
     module.Map = Map;
 

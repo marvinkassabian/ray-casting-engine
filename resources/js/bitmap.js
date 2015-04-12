@@ -5,14 +5,14 @@
 
   ENGINE.BITMAP = (function(module) {
 
-    function BitMap(src, width, height) {
+    function Bitmap(src, width, height) {
       this.image = new Image();
       this.image.src = src;
       this.width = width;
       this.height = height;
     }
 
-    module.BitMap = BitMap;
+    module.Bitmap = Bitmap;
 
     return module;
 

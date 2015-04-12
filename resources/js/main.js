@@ -3,14 +3,22 @@
 
   var Player = ENGINE.PLAYER.Player;
   var Map = ENGINE.MAP.Map;
+  var Controls = ENGINE.CONTROLS.Controls;
+  var Camera = ENGINE.CAMERA.Camera;
+  var GameLoop = ENGINE.GAMELOOP.GameLoop;
 
-  var player1 = new Player(0, 2, 3.4);
-  var player2 = new Player(1, 43, 65.4);
+  var display = document.getElementById('display');
+  var player = new Player(15.3, -1.2, Math.PI * 0.3);
+  var map = new Map(32);
+  var controls = new Controls();
+  var camera = new Camera(display, 320, 0.8);
+  var loop = new GameLoop();
+  map.randomize();
 
-  var map = new Map(23);
-  map.cast({x:1, y:2}, 2, 4);
+  loop.start(function frame(seconds) {
+    map.update(seconds);
+    player.update(controls.states, map, seconds);
+    camera.render(player, map);
+  });
 
-  console.log(player1);
-  console.log(player2);
-  console.log(map);
 })();

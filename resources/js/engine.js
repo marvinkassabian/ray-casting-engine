@@ -3,6 +3,8 @@
 
   var ENGINE = (function() {
 
+    var CIRCLE = Math.PI * 2;
+
     // ENGINE.namespace taken from YUI.namespace
     function namespace() {
       var a = arguments;
@@ -23,6 +25,7 @@
       return o;
     }
 
+    this.CIRCLE = CIRCLE;
     this.namespace = namespace;
 
     return this;
