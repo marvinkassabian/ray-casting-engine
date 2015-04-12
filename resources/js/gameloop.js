@@ -5,10 +5,6 @@
 
   ENGINE.GAMELOOP = (function(module) {
 
-    module.GameLoop = GameLoop;
-
-    return module;
-
     function GameLoop() {
       this.frame = this.frame.bind(this);
       this.lastTime = 0;
@@ -21,13 +17,17 @@
     };
 
     GameLoop.prototype.frame = function(time) {
-      var seconds = (time - this.lastTime) / 1000; // TODO: remove magic number
+      var seconds = (time - this.lastTime) / 1000; //TODO: magic number
       this.lastTime = time;
-      if (seconds < 0.2) { // TODO: remove magic number
+      if (seconds < 0.2) { //TODO: magic number
         this.callback(seconds);
       }
       window.requestAnimationFrame(this.frame);
     };
+
+    module.GameLoop = GameLoop;
+
+    return module;
 
   })(ENGINE.GAMELOOP);
 

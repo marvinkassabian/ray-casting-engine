@@ -5,15 +5,15 @@
 
   ENGINE.PLAYER = (function(module) {
 
-    module.Player = Player;
-
-    return module;
-
     function Player(x, y, direction) {
       this.x = x;
       this.y = y;
       this.direction = direction;
     }
+
+    module.Player = Player;
+
+    return module;
 
   })(ENGINE.PLAYER);
 

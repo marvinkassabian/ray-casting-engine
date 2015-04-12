@@ -8,6 +8,7 @@
   var player2 = new Player(1, 43, 65.4);
 
   var map = new Map(23);
+  map.cast({x:1, y:2}, 2, 4);
 
   console.log(player1);
   console.log(player2);

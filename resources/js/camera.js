@@ -5,12 +5,12 @@
 
   ENGINE.CAMERA = (function(module) {
 
+    function Camera() {
+    }
+
     module.Camera = Camera;
 
     return module;
-
-    function Camera() {
-    }
 
   })(ENGINE.CAMERA);
 

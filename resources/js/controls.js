@@ -5,12 +5,12 @@
 
   ENGINE.CONTROLS = (function(module) {
 
+    function Controls() {
+    }
+
     module.Controls = Controls;
 
     return module;
-
-    function Controls() {
-    }
 
   })(ENGINE.CONTROLS);
 

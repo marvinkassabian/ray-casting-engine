@@ -3,10 +3,6 @@
 
   var ENGINE = (function() {
 
-    this.namespace = namespace;
-
-    return this;
-
     // ENGINE.namespace taken from YUI.namespace
     function namespace() {
       var a = arguments;
@@ -18,7 +14,7 @@
         o = ENGINE;
 
         // ENGINE is implied, so it is ignored if it is included
-        for (j = (d[0] === 'ENGINE') ? 1 : 0; j < d.length; j = j + 1) {
+        for (j = ((d[0] === 'ENGINE') ? 1 : 0); j < d.length; j++) {
           o[d[j]] = o[d[j]] || {};
           o = o[d[j]];
         }
@@ -26,6 +22,10 @@
 
       return o;
     }
+
+    this.namespace = namespace;
+
+    return this;
 
   }).call(ENGINE || {});
 
