@@ -11,61 +11,6 @@
       length: Infinity
     };
 
-    var ray = function(origin, sin, cos, range, self) {
-      var stepX = step(sin, cos, origin.x, origin.y, false);
-      var stepY = step(cos, sin, origin.y, origin.x, true);
-      var nextStep;
-
-      if (stepX.length < stepY.length) {
-        nextStep = inspect(stepX, 1, 0, origin.distance,
-            stepX.y, sin, cos, self);
-      } else {
-        nextStep = inspect(stepY, 0, 1, origin.distance,
-            stepY.x, sin, cos, self);
-      }
-
-      if (nextStep.distance > range) {
-        return [origin];
-      } else {
-        return [origin].concat(ray(nextStep, sin, cos, range, self));
-      }
-    };
-
-    var step = function(rise, run, x, y, inverted) { //TODO: Understand inverted
-      if (run === 0) {
-        return noWall;
-      }
-
-      var dx = (run > 0) ?
-          Math.floor(x + 1) - x :
-          Math.ceil(x - 1) - x;
-      var dy = dx * (rise / run);
-
-      var nextStep = {
-        x: inverted ? y + dy : x + dx,
-        y: inverted ? x + dx : y + dy,
-        length: dx * dx + dy * dy
-      };
-
-      return nextStep;
-    };
-
-    var inspect = function(step, shiftX, shiftY, distance,
-        offset, sin, cos, self) {
-      var dx = cos < 0 ? shiftX : 0;
-      var dy = sin < 0 ? shiftY : 0;
-
-      step.height = self.get(step.x - dx, step.y - dy);
-      step.distance = distance + Math.sqrt(step.length);
-      if (shiftX) {
-        step.shading = (cos < 0) ? 2 : 0; //TODO: magic number
-      } else {
-        step.shading = (sin < 0) ? 2 : 1; //TODO: magic number
-      }
-      step.offset = offset - Math.floor(offset);
-      return step;
-    };
-
     function Map(size) {
       this.size = size;
       this.wallGrid = new Uint8Array(size * size);
@@ -105,7 +50,62 @@
         distance: 0
       };
 
-      return ray(origin, sin, cos, range, self);
+      return ray(origin);
+
+      function ray(origin) {
+        var stepX = step(sin, cos, origin.x, origin.y, false);
+        var stepY = step(cos, sin, origin.y, origin.x, true);
+        var nextStep;
+
+        if (stepX.length < stepY.length) {
+          nextStep = inspect(stepX, 1, 0, origin.distance,
+              stepX.y);
+        } else {
+          nextStep = inspect(stepY, 0, 1, origin.distance,
+              stepY.x);
+        }
+
+        if (nextStep.distance > range) {
+          return [origin];
+        } else {
+          return [origin].concat(ray(nextStep));
+        }
+      }
+
+      function step(rise, run, x, y, inverted) { //TODO: Understand inverted
+        if (run === 0) {
+          return noWall;
+        }
+
+        var dx = (run > 0) ?
+            Math.floor(x + 1) - x :
+            Math.ceil(x - 1) - x;
+        var dy = dx * (rise / run);
+
+        var nextStep = {
+          x: inverted ? y + dy : x + dx,
+          y: inverted ? x + dx : y + dy,
+          length: dx * dx + dy * dy
+        };
+
+        return nextStep;
+      }
+
+      function inspect(step, shiftX, shiftY, distance,
+          offset) {
+        var dx = cos < 0 ? shiftX : 0;
+        var dy = sin < 0 ? shiftY : 0;
+
+        step.height = self.get(step.x - dx, step.y - dy);
+        step.distance = distance + Math.sqrt(step.length);
+        if (shiftX) {
+          step.shading = (cos < 0) ? 2 : 0; //TODO: magic number
+        } else {
+          step.shading = (sin < 0) ? 2 : 1; //TODO: magic number
+        }
+        step.offset = offset - Math.floor(offset);
+        return step;
+      }
     };
 
     Map.prototype.update = function(seconds) {
