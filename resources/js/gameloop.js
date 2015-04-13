@@ -8,7 +8,8 @@
     function GameLoop() {
       this.frame = this.frame.bind(this);
       this.lastTime = 0;
-      this.callback = function() {};
+      this.callback = function() {
+      };
     }
 
     GameLoop.prototype.start = function(callback) {
