@@ -17,6 +17,7 @@
 
     Player.prototype.rotate = function(angle) {
       this.direction = (this.direction + angle + CIRCLE) % (CIRCLE);
+      console.log("direction: " + this.direction);
     };
 
     Player.prototype.walk = function(distance, map, direction) {
@@ -25,9 +26,11 @@
 
       if (map.get(this.x + dx, this.y) <= 0) {
         this.x += dx;
+        console.log("x: " + this.x);
       }
       if (map.get(this.x, this.y + dy) <= 0) {
         this.y += dy;
+        console.log("y: " + this.x);
       }
     };
 

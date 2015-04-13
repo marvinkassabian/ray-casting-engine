@@ -9,13 +9,13 @@
 
     function Camera(canvas, resolution, focalLength) {
       this.ctx = canvas.getContext('2d');
-      this.width = canvas.width = window.innerWidth;
-      this.height = canvas.height = window.innerHeight;
+      this.width = canvas.width = window.innerWidth * 0.5;
+      this.height = canvas.height = window.innerHeight * 0.5;
       this.resolution = resolution;
       this.spacing = this.width / resolution;
       this.focalLength = focalLength || 0.8; // TODO: magic number
       this.range = 14; // TODO: magic number
-      this.lightRange = 5; // TODO: magic number
+      this.lightRange = 10; // TODO: magic number
     }
 
     Camera.prototype.render = function(player, map) {
