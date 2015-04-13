@@ -4,6 +4,7 @@
   var ENGINE = (function() {
 
     var CIRCLE = Math.PI * 2;
+    var MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
     // ENGINE.namespace taken from YUI.namespace
     function namespace() {
@@ -26,6 +27,7 @@
     }
 
     this.CIRCLE = CIRCLE;
+    this.MOBILE = MOBILE;
     this.namespace = namespace;
 
     return this;

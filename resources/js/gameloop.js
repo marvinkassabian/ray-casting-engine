@@ -8,22 +8,17 @@
     function GameLoop() {
       this.frame = this.frame.bind(this);
       this.lastTime = 0;
-      this.callback = function() {
-      };
+      this.callback = function() {};
     }
-
     GameLoop.prototype.start = function(callback) {
       this.callback = callback;
-      window.requestAnimationFrame(this.frame);
+      requestAnimationFrame(this.frame);
     };
-
     GameLoop.prototype.frame = function(time) {
-      var seconds = (time - this.lastTime) / 1000; //TODO: magic number
+      var seconds = (time - this.lastTime) / 1000;
       this.lastTime = time;
-      if (seconds < 0.2) { //TODO: magic number
-        this.callback(seconds);
-      }
-      window.requestAnimationFrame(this.frame);
+      if (seconds < 0.2) this.callback(seconds);
+      requestAnimationFrame(this.frame);
     };
 
     module.GameLoop = GameLoop;
