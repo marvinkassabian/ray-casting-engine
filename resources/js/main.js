@@ -16,9 +16,10 @@
 
   map.randomize();
 
-  loop.start(function frame(seconds) {
-    map.update(seconds);
-    player.update(controls.states, map, seconds);
+  loop.start(function updateCallback(timestep) {
+    map.update(timestep);
+    player.update(controls.states, map, timestep);
+  }, function renderCallback() {
     camera.render(player, map);
   });
 
