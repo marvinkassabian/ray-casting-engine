@@ -7,7 +7,7 @@ module.exports = function(grunt) {
       my_target : {
         options : {
           sourceMap : true,
-          sourceMapName : 'source.map'
+          sourceMapName : 'raycaster.min.js.map'
         },
         files : {
           'raycaster.min.js' : [

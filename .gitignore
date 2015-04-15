@@ -1,5 +1,5 @@
 .jscsrc
 .jshintrc
-source.map
+raycaster.min.js.map
 raycaster.min.js
 node_modules/
