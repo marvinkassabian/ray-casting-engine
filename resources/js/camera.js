@@ -6,15 +6,15 @@
   ENGINE.Camera = (function(module) {
 
     var CIRCLE = ENGINE.CIRCLE;
-    var sizeRatio = 0.5;
+    var clarityFactor = 0.5;
     var defaultFocalLength = 0.8;
     var defaultRange = 14;
     var lightRange = 10;
 
     function Camera(canvas, resolution, focalLength) {
-      this.ctx = canvas.getContext('2d');
-      this.width = canvas.width = window.innerWidth * sizeRatio;
-      this.height = canvas.height = window.innerHeight * sizeRatio;
+      this.context = canvas.getContext('2d');
+      this.width = canvas.width = window.innerWidth * clarityFactor;
+      this.height = canvas.height = window.innerHeight * clarityFactor;
       this.resolution = resolution;
       this.spacing = this.width / resolution;
       this.focalLength = focalLength || defaultFocalLength;
@@ -30,32 +30,32 @@
     Camera.prototype.drawSky = function(direction, sky, ambient) {
       var width = sky.width * (this.height / sky.height) * 2;
       var left = (direction / CIRCLE) * -width;
-      this.ctx.save();
-      this.ctx.drawImage(sky.image, left, 0, width, this.height);
+      this.context.save();
+      this.context.drawImage(sky.image, left, 0, width, this.height);
       if (left < width - this.width) {
-        this.ctx.drawImage(sky.image, left + width, 0, width, this.height);
+        this.context.drawImage(sky.image, left + width, 0, width, this.height);
       }
       if (ambient > 0) {
-        this.ctx.fillStyle = '#ffffff';
-        this.ctx.globalAlpha = ambient * 0.1;
-        this.ctx.fillRect(0, this.height * 0.5, this.width, this.height * 0.5);
+        this.context.fillStyle = '#ffffff';
+        this.context.globalAlpha = ambient * 0.1;
+        this.context.fillRect(0, this.height * 0.5, this.width, this.height * 0.5);
       }
-      this.ctx.restore();
+      this.context.restore();
     };
 
     Camera.prototype.drawColumns = function(player, map) {
-      this.ctx.save();
+      this.context.save();
       for (var column = 0; column < this.resolution; column++) {
         var x = column / this.resolution - 0.5;
         var angle = Math.atan2(x, this.focalLength); //TODO: cache atan
         var ray = map.cast(player, player.direction + angle, this.range);
         this.drawColumn(column, ray, angle, map);
       }
-      this.ctx.restore();
+      this.context.restore();
     };
 
     Camera.prototype.drawColumn = function(column, ray, angle, map) {
-      var ctx = this.ctx;
+      var context = this.context;
       var texture = map.wallTexture;
       var left = Math.floor(column * this.spacing);
       var width = Math.ceil(this.spacing);
@@ -68,18 +68,18 @@
         if (s === hit) {
           var textureX = Math.floor(texture.width * step.offset);
           var wall = this.project(step.height, angle, step.distance);
-          ctx.globalAlpha = 1;
-          ctx.drawImage(texture.image, textureX, 0, 1, texture.height,
+          context.globalAlpha = 1;
+          context.drawImage(texture.image, textureX, 0, 1, texture.height,
               left, wall.top, width, wall.height);
 
-          ctx.fillStyle = '#000000';
-          ctx.globalAlpha = Math.max((step.distance + step.shading) /
+          context.fillStyle = '#000000';
+          context.globalAlpha = Math.max((step.distance + step.shading) /
               this.lightRange - map.light, 0);
-          ctx.fillRect(left, wall.top, width, wall.height);
+          context.fillRect(left, wall.top, width, wall.height);
         }
 
-        ctx.fillStyle = '#ffffff';
-        ctx.globalAlpha = 0.15;
+        context.fillStyle = '#ffffff';
+        context.globalAlpha = 0.15;
       }
     };
 
@@ -92,16 +92,6 @@
         height: wallHeight
       };
     };
-
-    /*
-    Camera.prototype.oscillate = function() {
-      this.focalLength = (this.osc) ? this.focalLength += 0.01 : this.focalLength -= 0.01;
-
-      if (this.focalLength < 0.001 || this.focalLength > 0.8) {
-        this.osc = !this.osc;
-      }
-    };
-    */
 
     module.Camera = Camera;
 

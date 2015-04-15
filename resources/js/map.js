@@ -7,7 +7,7 @@
 
     var Bitmap = ENGINE.Bitmap.Bitmap;
 
-    var wallProbability = 0.3;
+    var defaultWallProbability = 0.3;
     var noWall = {
       length: Infinity
     };
@@ -33,7 +33,8 @@
       }
     };
 
-    Map.prototype.randomize = function() {
+    Map.prototype.randomize = function(probability) {
+      var wallProbability = probability || defaultWallProbability;
       for (var i = 0; i < (this.size * this.size); i++) {
         this.wallGrid[i] = (Math.random() < wallProbability ? 1 : 0);
       }

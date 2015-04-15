@@ -12,7 +12,6 @@
   var map = new Map(32);
   var controls = new Controls();
   var camera = new Camera(display, 240, 0.6);
-  camera.osc = true;
   var loop = new GameLoop();
 
   map.randomize();

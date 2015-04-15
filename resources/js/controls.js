@@ -60,7 +60,6 @@
       }
 
       var that = this;
-
       setTimeout(function() {
         that.onMouseMoveEnd(e);
       }, 10);
