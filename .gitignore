@@ -1,2 +1,5 @@
 .jscsrc
 .jshintrc
+source.map
+raycaster.min.js
+node_modules/
