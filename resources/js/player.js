@@ -45,11 +45,9 @@
         this.walk(movementSpeed * seconds, map, (CIRCLE / 2));
       }
       if (controls.turnLeft) {
-        console.log("turnLeft");
         this.rotate(-1 * rotateSpeed * Math.PI * seconds);
       }
       if (controls.turnRight) {
-        console.log("turnRight");
         this.rotate(rotateSpeed * Math.PI * seconds);
       }
     };

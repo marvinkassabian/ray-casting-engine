@@ -10,7 +10,11 @@
         65: 'left',
         68: 'right',
         87: 'forward',
-        83: 'backward'
+        83: 'backward',
+        37: 'turnLeft',
+        39: 'turnRight',
+        'mouseLeft': 'turnLeft',
+        'mouseRight': 'turnRight'
       };
       this.states = {
         'left': false,
@@ -46,16 +50,20 @@
     };
 
     Controls.prototype.onMouseMove = function(e) {
+      var leftState = this.codes.mouseLeft;
+      var rightState = this.codes.mouseRight;
       var x = (e.movementX || e.mozMovementX || e.webkitMovementX || 0);
       if (x > 0) {
-        this.states.turnLeft = false;
-        this.states.turnRight = true;
+        this.states[rightState] = true;
       } else if (x < 0) {
-        this.states.turnRight = false;
-        this.states.turnLeft = true;
-      } else {
-        this.onMouseMoveEnd(e);
+        this.states[leftState] = true;
       }
+
+      var that = this;
+
+      setTimeout(function() {
+        that.onMouseMoveEnd(e);
+      }, 10);
     };
 
     Controls.prototype.onMouseMoveEnd = function(e) {
