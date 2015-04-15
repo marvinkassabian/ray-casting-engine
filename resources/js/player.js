@@ -1,9 +1,9 @@
-(function() { //TODO: change controls to modern shooters, sperate code
+(function() {
   "use strict";
 
-  ENGINE.namespace('ENGINE.PLAYER');
+  ENGINE.namespace('ENGINE.Player');
 
-  ENGINE.PLAYER = (function(module) {
+  ENGINE.Player = (function(module) {
 
     var CIRCLE = ENGINE.CIRCLE;
     var movementSpeed = 2.4;
@@ -45,9 +45,11 @@
         this.walk(movementSpeed * seconds, map, (CIRCLE / 2));
       }
       if (controls.turnLeft) {
+        console.log("turnLeft");
         this.rotate(-1 * rotateSpeed * Math.PI * seconds);
       }
       if (controls.turnRight) {
+        console.log("turnRight");
         this.rotate(rotateSpeed * Math.PI * seconds);
       }
     };
@@ -56,6 +58,6 @@
 
     return module;
 
-  })(ENGINE.PLAYER);
+  })(ENGINE.Player);
 
 })();

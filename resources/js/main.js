@@ -1,17 +1,18 @@
 (function() {
   "use strict";
 
-  var Player = ENGINE.PLAYER.Player;
-  var Map = ENGINE.MAP.Map;
-  var Controls = ENGINE.CONTROLS.Controls;
-  var Camera = ENGINE.CAMERA.Camera;
-  var GameLoop = ENGINE.GAMELOOP.GameLoop;
+  var Player = ENGINE.Player.Player;
+  var Map = ENGINE.Map.Map;
+  var Controls = ENGINE.Controls.Controls;
+  var Camera = ENGINE.Camera.Camera;
+  var GameLoop = ENGINE.GameLoop.GameLoop;
 
   var display = document.getElementById('display');
   var player = new Player(15.3, -1.2, Math.PI * 0.3);
   var map = new Map(32);
   var controls = new Controls();
   var camera = new Camera(display, 240, 0.6);
+  camera.osc = true;
   var loop = new GameLoop();
 
   map.randomize();

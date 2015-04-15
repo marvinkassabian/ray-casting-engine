@@ -1,21 +1,25 @@
-(function() { //TODO: figure out later
+(function() {
   "use strict";
 
-  ENGINE.namespace('ENGINE.CAMERA');
+  ENGINE.namespace('ENGINE.Camera');
 
-  ENGINE.CAMERA = (function(module) {
+  ENGINE.Camera = (function(module) {
 
     var CIRCLE = ENGINE.CIRCLE;
+    var sizeRatio = 0.5;
+    var defaultFocalLength = 0.8;
+    var defaultRange = 14;
+    var lightRange = 10;
 
     function Camera(canvas, resolution, focalLength) {
       this.ctx = canvas.getContext('2d');
-      this.width = canvas.width = window.innerWidth * 0.5;
-      this.height = canvas.height = window.innerHeight * 0.5;
+      this.width = canvas.width = window.innerWidth * sizeRatio;
+      this.height = canvas.height = window.innerHeight * sizeRatio;
       this.resolution = resolution;
       this.spacing = this.width / resolution;
-      this.focalLength = focalLength || 0.8; // TODO: magic number
-      this.range = 14; // TODO: magic number
-      this.lightRange = 10; // TODO: magic number
+      this.focalLength = focalLength || defaultFocalLength;
+      this.range = defaultRange;
+      this.lightRange = lightRange;
     }
 
     Camera.prototype.render = function(player, map) {
@@ -89,10 +93,20 @@
       };
     };
 
+    /*
+    Camera.prototype.oscillate = function() {
+      this.focalLength = (this.osc) ? this.focalLength += 0.01 : this.focalLength -= 0.01;
+
+      if (this.focalLength < 0.001 || this.focalLength > 0.8) {
+        this.osc = !this.osc;
+      }
+    };
+    */
+
     module.Camera = Camera;
 
     return module;
 
-  })(ENGINE.CAMERA);
+  })(ENGINE.Camera);
 
 })();

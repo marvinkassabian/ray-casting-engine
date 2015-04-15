@@ -1,11 +1,11 @@
 (function() {
   "use strict";
 
-  ENGINE.namespace('ENGINE.MAP');
+  ENGINE.namespace('ENGINE.Map');
 
-  ENGINE.MAP = (function(module) {
+  ENGINE.Map = (function(module) {
 
-    var Bitmap = ENGINE.BITMAP.Bitmap;
+    var Bitmap = ENGINE.Bitmap.Bitmap;
 
     var wallProbability = 0.3;
     var noWall = {
@@ -100,9 +100,9 @@
         step.height = self.get(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length);
         if (shiftX) {
-          step.shading = (cos < 0) ? 2 : 0; //TODO: magic number
+          step.shading = (cos < 0) ? 2 : 0;
         } else {
-          step.shading = (sin < 0) ? 2 : 1; //TODO: magic number
+          step.shading = (sin < 0) ? 2 : 1;
         }
         step.offset = offset - Math.floor(offset);
         return step;
@@ -119,6 +119,6 @@
 
     return module;
 
-  })(ENGINE.MAP);
+  })(ENGINE.Map);
 
 })();

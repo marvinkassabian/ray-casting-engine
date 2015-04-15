@@ -1,9 +1,9 @@
 (function() {
   "use strict";
 
-  ENGINE.namespace('ENGINE.BITMAP');
+  ENGINE.namespace('ENGINE.Bitmap');
 
-  ENGINE.BITMAP = (function(module) {
+  ENGINE.Bitmap = (function(module) {
 
     function Bitmap(src, width, height) {
       this.image = new Image();
@@ -16,6 +16,6 @@
 
     return module;
 
-  })(ENGINE.BITMAP);
+  })(ENGINE.Bitmap);
 
 })();

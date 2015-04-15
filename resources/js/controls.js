@@ -1,45 +1,17 @@
 (function() { //TODO: understand the code, add jQuery
   "use strict";
 
-  ENGINE.namespace('ENGINE.CONTROLS');
+  ENGINE.namespace('ENGINE.Controls');
 
-  ENGINE.CONTROLS = (function(module) {
+  ENGINE.Controls = (function(module) {
 
     function Controls() {//37:left, 39:right, 38:up, 40:down
       this.codes  = { //65:a, 68:d, 87:w, 83:s, 81:q, 69:e
         65: 'left',
         68: 'right',
         87: 'forward',
-        83: 'backward',
-        37: 'turnLeft',
-        39: 'turnRight'
+        83: 'backward'
       };
-      this.states = {
-        'left': false,
-        'right': false,
-        'forward': false,
-        'backward': false
-      };
-      document.addEventListener('keydown', this.onKey.bind(this, true), false);
-      document.addEventListener('keyup', this.onKey.bind(this, false), false);
-      document.addEventListener('touchstart', this.onTouch.bind(this), false);
-      document.addEventListener('touchmove', this.onTouch.bind(this), false);
-      document.addEventListener('touchend', this.onTouchEnd.bind(this), false);
-    }
-
-    Controls.prototype.onTouch = function(e) {
-      var t = e.touches[0];
-      this.onTouchEnd(e);
-      if (t.pageY < window.innerHeight * 0.5) {
-        this.onKey(true, { keyCode: 87 });
-      } else if (t.pageX < window.innerWidth * 0.5) {
-        this.onKey(true, { keyCode: 81 });
-      } else if (t.pageY > window.innerWidth * 0.5) {
-        this.onKey(true, { keyCode: 69 });
-      }
-    };
-
-    Controls.prototype.onTouchEnd = function(e) {
       this.states = {
         'left': false,
         'right': false,
@@ -48,9 +20,16 @@
         'turnLeft': false,
         'turnRight': false
       };
-      e.preventDefault();
-      e.stopPropagation();
-    };
+      document.addEventListener('keydown',
+          this.onKey.bind(this, true), false);
+      document.addEventListener('keyup',
+          this.onKey.bind(this, false), false);
+      document.addEventListener('mousemove',
+          this.onMouseMove.bind(this), false);
+      document.body.onclick = document.body.requestPointerLock ||
+          document.body.mozRequestPointerLock ||
+          document.body.webkitRequestPointerLock;
+    }
 
     Controls.prototype.onKey = function(val, e) {
       var state = this.codes[e.keyCode];
@@ -66,10 +45,34 @@
       }
     };
 
+    Controls.prototype.onMouseMove = function(e) {
+      var x = (e.movementX || e.mozMovementX || e.webkitMovementX || 0);
+      if (x > 0) {
+        this.states.turnLeft = false;
+        this.states.turnRight = true;
+      } else if (x < 0) {
+        this.states.turnRight = false;
+        this.states.turnLeft = true;
+      } else {
+        this.onMouseMoveEnd(e);
+      }
+    };
+
+    Controls.prototype.onMouseMoveEnd = function(e) {
+      this.states.turnLeft = false;
+      this.states.turnRight = false;
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      if (e.stopPropagation) {
+        e.stopPropagation();
+      }
+    };
+
     module.Controls = Controls;
 
     return module;
 
-  })(ENGINE.CONTROLS);
+  })(ENGINE.Controls);
 
 })();

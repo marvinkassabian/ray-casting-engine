@@ -1,11 +1,12 @@
 (function() {
   "use strict";
 
-  ENGINE.namespace('ENGINE.GAMELOOP');
+  ENGINE.namespace('ENGINE.GameLoop');
 
-  ENGINE.GAMELOOP = (function(module) {
+  ENGINE.GameLoop = (function(module) {
 
-    var defaultTimestep = 1 / 120;
+    var defaultTimestep = 1 / 60;
+    var secondsPerMillisecond = 1000;
 
     function GameLoop() {
       this.frame = this.frame.bind(this);
@@ -15,7 +16,6 @@
       this.callback = function() {
       };
       this.render = function() {
-
       };
     }
 
@@ -26,7 +26,7 @@
     };
 
     GameLoop.prototype.frame = function(time) {
-      var seconds = (time - this.lastTime) / 1000; //TODO: magic number
+      var seconds = (time - this.lastTime) / secondsPerMillisecond;
       this.lastTime = time;
       this.accumulator += seconds;
 
@@ -43,6 +43,6 @@
 
     return module;
 
-  })(ENGINE.GAMELOOP);
+  })(ENGINE.GameLoop);
 
 })();
