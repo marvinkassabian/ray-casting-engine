@@ -12,6 +12,7 @@ module.exports = function(grunt) {
         files : {
           'resources/js/raycaster.min.js' : [
             'resources/js/engine.js',
+            'resources/js/virtualkeys.js',
             'resources/js/player.js',
             'resources/js/controls.js',
             'resources/js/bitmap.js',

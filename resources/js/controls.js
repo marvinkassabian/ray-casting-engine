@@ -5,17 +5,19 @@
 
   ENGINE.Controls = (function(module) {
 
-    function Controls() {//37:left, 39:right, 38:up, 40:down
-      this.codes  = { //65:a, 68:d, 87:w, 83:s, 81:q, 69:e
-        65: 'left',
-        68: 'right',
-        87: 'forward',
-        83: 'backward',
-        37: 'turnLeft',
-        39: 'turnRight',
+    var virtualKeys = ENGINE.VirtualKeys.virtualKeys;
+
+    function Controls() {
+      this.codes  = {
         'mouseLeft': 'turnLeft',
         'mouseRight': 'turnRight'
       };
+      this.codes[virtualKeys.VK_A] = 'left';
+      this.codes[virtualKeys.VK_D] = 'right';
+      this.codes[virtualKeys.VK_W] = 'forward';
+      this.codes[virtualKeys.VK_S] = 'backward';
+      this.codes[virtualKeys.VK_LEFT] = 'turnLeft';
+      this.codes[virtualKeys.VK_RIGHT] = 'turnRight';
       this.states = {
         'left': false,
         'right': false,
