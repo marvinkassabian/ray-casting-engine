@@ -15,10 +15,10 @@
     function Map(size) {
       this.size = size;
       this.wallGrid = new Uint8Array(size * size);
-      this.skybox = new Bitmap('resources/images/sky_texture.png',
-          3840, 1080);
-      this.wallTexture = new Bitmap('resources/images/wall_texture.png',
-          256, 256);
+      this.skybox = new Bitmap('resources/images/black_sky_texture.jpg',
+          3540, 2220);
+      this.wallTexture = new Bitmap('resources/images/green_wall_texture.png',
+          300, 300);
       this.light = 0;
     }
 
