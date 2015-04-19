@@ -47,7 +47,7 @@
       this.context.save();
       for (var column = 0; column < this.resolution; column++) {
         var x = column / this.resolution - 0.5;
-        var angle = ENGINE.atan2(x, this.focalLength);
+        var angle = Math.atan2(x, this.focalLength);
         var ray = map.cast(player, player.direction + angle, this.range);
         this.drawColumn(column, ray, angle, map);
       }
@@ -84,7 +84,7 @@
     };
 
     Camera.prototype.project = function(height, angle, distance) {
-      var z = distance * ENGINE.cos(angle);
+      var z = distance * Math.cos(angle);
       var wallHeight = this.height * height / z;
       var bottom = this.height / 2 * (1 + 1 / z);
       return {

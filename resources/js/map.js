@@ -42,8 +42,8 @@
 
     Map.prototype.cast = function(point, angle, range) {
       var self = this;
-      var sin = ENGINE.sin(angle);
-      var cos = ENGINE.cos(angle);
+      var sin = Math.sin(angle);
+      var cos = Math.cos(angle);
 
       var origin = {
         x: point.x,
