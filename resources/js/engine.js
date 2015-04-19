@@ -5,7 +5,7 @@
 
     var CIRCLE = Math.PI * 2;
 
-    // ENGINE.namespace taken from YUI.namespace
+    // namespace taken from YUI
     function namespace() {
       var a = arguments;
       var o = null;
@@ -25,8 +25,42 @@
       return o;
     }
 
+    // has taken from Underscore
+    var has = function(obj, key) {
+      return obj != null && hasOwnProperty.call(obj, key);
+    };
+
+    // memoize taken from Underscore
+    var memoize = function(func, hasher) {
+      var memoize = function(key) {
+        var cache = memoize.cache;
+        var address = '' + (hasher ? hasher.apply(this, arguments) : key);
+        if (!has(cache, address)) {
+          cache[address] = func.apply(this, arguments);
+        }
+        return cache[address];
+      };
+      memoize.cache = {};
+      return memoize;
+    };
+
+    var atan2 = memoize(function(x, y) {
+      return Math.atan2(x, y);
+    });
+
+    var cos = memoize(function(x) {
+      return Math.cos(x);
+    });
+
+    var sin = memoize(function(x) {
+      return Math.sin(x);
+    });
+
     this.CIRCLE = CIRCLE;
     this.namespace = namespace;
+    this.atan2 = atan2;
+    this.cos = cos;
+    this.sin = sin;
 
     return this;
 

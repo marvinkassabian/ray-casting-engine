@@ -42,8 +42,8 @@
 
     Map.prototype.cast = function(point, angle, range) {
       var self = this;
-      var sin = Math.sin(angle);
-      var cos = Math.cos(angle);
+      var sin = ENGINE.sin(angle);
+      var cos = ENGINE.cos(angle);
 
       var origin = {
         x: point.x,
@@ -93,8 +93,7 @@
         return nextStep;
       }
 
-      function inspect(step, shiftX, shiftY, distance,
-          offset) {
+      function inspect(step, shiftX, shiftY, distance, offset) {
         var dx = cos < 0 ? shiftX : 0;
         var dy = sin < 0 ? shiftY : 0;
 
