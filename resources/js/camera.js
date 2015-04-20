@@ -9,7 +9,6 @@
     var clarityFactor = 0.5;
     var defaultFocalLength = 0.8;
     var defaultRange = 14;
-    var lightRange = 10;
 
     function Camera(canvas, resolution, focalLength) {
       this.context = canvas.getContext('2d');
@@ -19,7 +18,6 @@
       this.spacing = this.width / resolution;
       this.focalLength = focalLength || defaultFocalLength;
       this.range = defaultRange;
-      this.lightRange = lightRange;
     }
 
     Camera.prototype.render = function(player, map) {
@@ -35,11 +33,6 @@
       if (left < width - this.width) {
         this.context.drawImage(sky.image, left + width, 0, width, this.height);
       }
-      //if (ambient > 0) {
-      //  this.context.fillStyle = '#ffffff';
-      //  this.context.globalAlpha = ambient * 0.1;
-      //  this.context.fillRect(0, this.height * 0.5, this.width, this.height * 0.5);
-      //}
       this.context.restore();
     };
 
@@ -68,18 +61,10 @@
         if (s === hit) {
           var textureX = Math.floor(texture.width * step.offset);
           var wall = this.project(step.height, angle, step.distance);
-          //context.globalAlpha = 1;
           context.drawImage(texture.image, textureX, 0, 1, texture.height,
               left, wall.top, width, wall.height);
-
-          //context.fillStyle = '#000000';
-          //context.globalAlpha = Math.max((step.distance + step.shading) /
-          //    this.lightRange - map.light, 0);
-          //context.fillRect(left, wall.top, width, wall.height);
         }
 
-        //context.fillStyle = '#ffffff';
-        //context.globalAlpha = 0.15;
       }
     };
 

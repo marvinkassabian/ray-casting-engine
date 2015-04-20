@@ -15,11 +15,10 @@
     function Map(size) {
       this.size = size;
       this.wallGrid = new Uint8Array(size * size);
-      this.skybox = new Bitmap('resources/images/black_sky_texture.jpg',
-          3540, 2220);
-      this.wallTexture = new Bitmap('resources/images/green_wall_texture.png',
-          300, 300);
-      this.light = 0;
+      this.skybox = new Bitmap('resources/images/sky_texture.png',
+          128, 64);
+      this.wallTexture = new Bitmap('resources/images/wall_texture.png',
+          640, 640);
     }
 
     Map.prototype.get = function(x, y) {
@@ -74,7 +73,7 @@
         }
       }
 
-      function step(rise, run, x, y, inverted) { //TODO: Understand inverted
+      function step(rise, run, x, y, inverted) {
         if (run === 0) {
           return noWall;
         }
@@ -99,20 +98,12 @@
 
         step.height = self.get(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length);
-        if (shiftX) {
-          step.shading = (cos < 0) ? 2 : 0;
-        } else {
-          step.shading = (sin < 0) ? 2 : 1;
-        }
         step.offset = offset - Math.floor(offset);
         return step;
       }
     };
 
     Map.prototype.update = function(seconds) {
-      if (this.light > 0) {
-        this.light = Math.max(this.light - 10 * seconds, 0);
-      }
     };
 
     module.Map = Map;
