@@ -9,7 +9,7 @@
     var clarityFactor = 0.5;
     var defaultFocalLength = 0.8;
     var defaultRange = 14;
-    var lightRange = 10;
+    var defaultLightRange = 10;
 
     function Camera(canvas, resolution, focalLength) {
       this.context = canvas.getContext('2d');
@@ -19,7 +19,7 @@
       this.spacing = this.width / resolution;
       this.focalLength = focalLength || defaultFocalLength;
       this.range = defaultRange;
-      this.lightRange = lightRange;
+      this.lightRange = defaultLightRange;
     }
 
     Camera.prototype.render = function(player, map) {
