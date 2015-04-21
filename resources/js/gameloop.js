@@ -5,7 +5,7 @@
 
   ENGINE.GameLoop = (function(module) {
 
-    var defaultTimestep = 1 / 60;
+    var defaultTimestep = 1 / 30;
     var secondsPerMillisecond = 1000;
 
     function GameLoop() {

@@ -59,11 +59,9 @@
         var nextStep;
 
         if (stepX.length < stepY.length) {
-          nextStep = inspect(stepX, 1, 0, origin.distance,
-              stepX.y);
+          nextStep = inspect(stepX, 1, 0, origin.distance, stepX.y);
         } else {
-          nextStep = inspect(stepY, 0, 1, origin.distance,
-              stepY.x);
+          nextStep = inspect(stepY, 0, 1, origin.distance, stepY.x);
         }
 
         if (nextStep.distance > range) {

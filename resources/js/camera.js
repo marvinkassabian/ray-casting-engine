@@ -8,7 +8,7 @@
     var CIRCLE = ENGINE.CIRCLE;
     var clarityFactor = 0.5;
     var defaultFocalLength = 0.8;
-    var defaultRange = 14;
+    var defaultRange = 10;
 
     function Camera(canvas, resolution, focalLength) {
       this.context = canvas.getContext('2d');
