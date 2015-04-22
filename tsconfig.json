@@ -21,7 +21,7 @@
         "./resources/ts/main.ts",
         "./resources/ts/map.ts",
         "./resources/ts/player.ts",
-        "./resources/ts/virtualkeys.ts",
+        "./resources/ts/virtualkeys.ts"
     ],
     "compileOnSave": true
 }
