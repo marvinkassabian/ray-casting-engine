@@ -1,6 +1,4 @@
 .jscsrc
 .jshintrc
-raycaster.min.js.map
-raycaster.min.js
 node_modules/
 resources/js/
