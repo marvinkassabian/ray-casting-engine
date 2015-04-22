@@ -1,9 +1,13 @@
 "use strict";
 
+/// <reference path="map.ts" />
+/// <reference path="controls.ts" />
+
 class GamePlayer {
-  CIRCLE: number = Math.PI * 2;
-  movementSpeed: number = 2.4;
-  rotateSpeed: number = 0.7;
+
+  private static CIRCLE: number = Math.PI * 2;
+  private static movementSpeed: number = 2.4;
+  private static rotateSpeed: number = 0.7;
 
   x: number;
   y: number;
@@ -15,13 +19,13 @@ class GamePlayer {
     this.direction = direction;
   }
 
-  rotate(angle) {
-    this.direction = (this.direction + angle + this.CIRCLE) % (this.CIRCLE);
+  rotate(angle: number): void {
+    this.direction = (this.direction + angle + GamePlayer.CIRCLE) % (GamePlayer.CIRCLE);
   }
 
-  walk(distance, map, direction) {
-    var dx = Math.cos(this.direction + direction) * distance;
-    var dy = Math.sin(this.direction + direction) * distance;
+  walk(distance: number, map: GameMap, direction: number): void {
+    var dx: number = Math.cos(this.direction + direction) * distance;
+    var dy: number = Math.sin(this.direction + direction) * distance;
 
     if (map.get(this.x + dx, this.y) <= 0) {
       this.x += dx;
@@ -31,24 +35,24 @@ class GamePlayer {
     }
   }
 
-  update(controls, map, seconds) {
-    if (controls.left) {
-      this.walk(this.movementSpeed * seconds, map, (this.CIRCLE * 3 / 4));
+  update(controls: States, map: GameMap, seconds: number): void {// Figure out controls' type
+    if (controls['left']) {
+      this.walk(GamePlayer.movementSpeed * seconds, map, (GamePlayer.CIRCLE * 3 / 4));
     }
-    if (controls.right) {
-      this.walk(this.movementSpeed * seconds, map, (this.CIRCLE / 4));
+    if (controls['right']) {
+      this.walk(GamePlayer.movementSpeed * seconds, map, (GamePlayer.CIRCLE / 4));
     }
-    if (controls.forward) {
-      this.walk(this.movementSpeed * seconds, map, 0);
+    if (controls['forward']) {
+      this.walk(GamePlayer.movementSpeed * seconds, map, 0);
     }
-    if (controls.backward) {
-      this.walk(this.movementSpeed * seconds, map, (this.CIRCLE / 2));
+    if (controls['backward']) {
+      this.walk(GamePlayer.movementSpeed * seconds, map, (GamePlayer.CIRCLE / 2));
     }
-    if (controls.turnLeft) {
-      this.rotate(-1 * this.rotateSpeed * Math.PI * seconds);
+    if (controls['turnLeft']) {
+      this.rotate(-1 * GamePlayer.rotateSpeed * Math.PI * seconds);
     }
-    if (controls.turnRight) {
-      this.rotate(this.rotateSpeed * Math.PI * seconds);
+    if (controls['turnRight']) {
+      this.rotate(GamePlayer.rotateSpeed * Math.PI * seconds);
     }
   }
 }

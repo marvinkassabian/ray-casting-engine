@@ -2,14 +2,15 @@
 
 class GameLoop {
 
+  private static defaultTimestep: number = 1 / 30;
+  private static millisecondsPerSecond: number = 1000;
+
   frameCallback: FrameRequestCallback;
   lastTime: number;
   accumulator: number;
   timestep: number;
   updateCallback: Function;
   renderCallback: Function;
-  private static defaultTimestep: number = 1 / 30;
-  private static millisecondsPerSecond: number = 1000;
 
   constructor() {
     this.frameCallback = this.frame.bind(this);
@@ -23,14 +24,14 @@ class GameLoop {
   }
 
 
-  start(updateCallback, renderCallback) {
+  start(updateCallback: Function, renderCallback: Function) {
     this.updateCallback = updateCallback;
     this.renderCallback = renderCallback;
     window.requestAnimationFrame(this.frameCallback);
   }
 
-  frame(time) {
-    var seconds = (time - this.lastTime) / GameLoop.millisecondsPerSecond;
+  frame(time: number) {
+    var seconds: number = (time - this.lastTime) / GameLoop.millisecondsPerSecond;
     this.lastTime = time;
     this.accumulator += seconds;
 

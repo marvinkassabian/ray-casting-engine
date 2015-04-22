@@ -42,7 +42,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-typescript');
 
   // Default task(s).
-  grunt.registerTask('default', ['ts']);
+  grunt.registerTask('default', ['ts', 'min']);
   grunt.registerTask('min', ['uglify']);
   grunt.registerTask('ts', ['typescript']);
 

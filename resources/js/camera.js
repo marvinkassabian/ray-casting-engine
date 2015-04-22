@@ -10,10 +10,10 @@ var Camera = (function () {
         this.range = Camera.defaultRange;
     }
     Camera.prototype.render = function (player, map) {
-        this.drawSky(player.direction, map.skybox, map.light);
+        this.drawSky(player.direction, map.skybox);
         this.drawColumns(player, map);
     };
-    Camera.prototype.drawSky = function (direction, sky, ambient) {
+    Camera.prototype.drawSky = function (direction, sky) {
         var width = sky.width * (this.height / sky.height) * 2;
         var left = (direction / Camera.CIRCLE) * -width;
         this.context.save();

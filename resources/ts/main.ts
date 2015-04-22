@@ -6,7 +6,7 @@
 /// <reference path="camera.ts" />
 /// <reference path="loop.ts" />
 
-var display = <HTMLCanvasElement> document.getElementById('display');
+var display: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('display');
 var player: GamePlayer = new GamePlayer(15.3, -1.2, Math.PI * 0.3);
 var map: GameMap = new GameMap(32);
 var controls: Controls = new Controls();

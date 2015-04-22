@@ -1,15 +1,14 @@
 "use strict";
+/// <reference path="map.ts" />
+/// <reference path="controls.ts" />
 var GamePlayer = (function () {
     function GamePlayer(x, y, direction) {
-        this.CIRCLE = Math.PI * 2;
-        this.movementSpeed = 2.4;
-        this.rotateSpeed = 0.7;
         this.x = x;
         this.y = y;
         this.direction = direction;
     }
     GamePlayer.prototype.rotate = function (angle) {
-        this.direction = (this.direction + angle + this.CIRCLE) % (this.CIRCLE);
+        this.direction = (this.direction + angle + GamePlayer.CIRCLE) % (GamePlayer.CIRCLE);
     };
     GamePlayer.prototype.walk = function (distance, map, direction) {
         var dx = Math.cos(this.direction + direction) * distance;
@@ -22,24 +21,27 @@ var GamePlayer = (function () {
         }
     };
     GamePlayer.prototype.update = function (controls, map, seconds) {
-        if (controls.left) {
-            this.walk(this.movementSpeed * seconds, map, (this.CIRCLE * 3 / 4));
+        if (controls['left']) {
+            this.walk(GamePlayer.movementSpeed * seconds, map, (GamePlayer.CIRCLE * 3 / 4));
         }
-        if (controls.right) {
-            this.walk(this.movementSpeed * seconds, map, (this.CIRCLE / 4));
+        if (controls['right']) {
+            this.walk(GamePlayer.movementSpeed * seconds, map, (GamePlayer.CIRCLE / 4));
         }
-        if (controls.forward) {
-            this.walk(this.movementSpeed * seconds, map, 0);
+        if (controls['forward']) {
+            this.walk(GamePlayer.movementSpeed * seconds, map, 0);
         }
-        if (controls.backward) {
-            this.walk(this.movementSpeed * seconds, map, (this.CIRCLE / 2));
+        if (controls['backward']) {
+            this.walk(GamePlayer.movementSpeed * seconds, map, (GamePlayer.CIRCLE / 2));
         }
-        if (controls.turnLeft) {
-            this.rotate(-1 * this.rotateSpeed * Math.PI * seconds);
+        if (controls['turnLeft']) {
+            this.rotate(-1 * GamePlayer.rotateSpeed * Math.PI * seconds);
         }
-        if (controls.turnRight) {
-            this.rotate(this.rotateSpeed * Math.PI * seconds);
+        if (controls['turnRight']) {
+            this.rotate(GamePlayer.rotateSpeed * Math.PI * seconds);
         }
     };
+    GamePlayer.CIRCLE = Math.PI * 2;
+    GamePlayer.movementSpeed = 2.4;
+    GamePlayer.rotateSpeed = 0.7;
     return GamePlayer;
 })();

@@ -1,6 +1,17 @@
 "use strict";
 
+interface Wall {
+  top: number;
+  height: number;
+}
+
 class Camera {
+
+  private static clarityFactor: number = 0.5;
+  private static defaultFocalLength: number = 0.8;
+  private static defaultRange: number = 10;
+  private static CIRCLE: number = Math.PI * 2;
+
   context: CanvasRenderingContext2D;
   width: number;
   height: number;
@@ -8,11 +19,6 @@ class Camera {
   spacing: number;
   focalLength: number;
   range: number;
-
-  private static clarityFactor: number = 0.5;
-  private static defaultFocalLength: number = 0.8;
-  private static defaultRange: number = 10;
-  private static CIRCLE: number = Math.PI * 2;
 
   constructor(canvas: HTMLCanvasElement, resolution: number,
       focalLength: number) {
@@ -25,14 +31,14 @@ class Camera {
     this.range = Camera.defaultRange;
   }
 
-  render(player: any, map: any) {
-    this.drawSky(player.direction, map.skybox, map.light);
+  render(player: GamePlayer, map: GameMap): void {
+    this.drawSky(player.direction, map.skybox);
     this.drawColumns(player, map);
   }
 
-  drawSky(direction, sky, ambient) {
-    var width = sky.width * (this.height / sky.height) * 2;
-    var left = (direction / Camera.CIRCLE) * -width;
+  drawSky(direction: number, sky: Bitmap): void {
+    var width: number = sky.width * (this.height / sky.height) * 2;
+    var left: number = (direction / Camera.CIRCLE) * -width;
     this.context.save();
     this.context.drawImage(sky.image, left, 0, width, this.height);
     if (left < width - this.width) {
@@ -41,39 +47,38 @@ class Camera {
     this.context.restore();
   }
 
-  drawColumns(player: any, map: any) {
+  drawColumns(player: GamePlayer, map: GameMap): void {
     this.context.save();
-    for (var column = 0; column < this.resolution; column++) {
-      var x = column / this.resolution - 0.5;
-      var angle = Math.atan2(x, this.focalLength);
-      var ray = map.cast(player, player.direction + angle, this.range);
+    for (var column: number = 0; column < this.resolution; column++) {
+      var x: number = column / this.resolution - 0.5;
+      var angle: number = Math.atan2(x, this.focalLength);
+      var ray: Step[] = map.cast(player, player.direction + angle, this.range);
       this.drawColumn(column, ray, angle, map);
     }
     this.context.restore();
   }
 
-  drawColumn(column: any, ray: any, angle: any, map: any) {
-    var context = this.context;
-    var texture = map.wallTexture;
-    var left = Math.floor(column * this.spacing);
-    var width = Math.ceil(this.spacing);
-    var hit = 0;
+  drawColumn(column: number, ray: Step[], angle: number, map: GameMap): void {
+    var context: CanvasRenderingContext2D = this.context;
+    var texture: Bitmap = map.wallTexture;
+    var left: number = Math.floor(column * this.spacing);
+    var width: number = Math.ceil(this.spacing);
+    var hit: number = 0;
     while (hit < ray.length && ray[hit].height <= 0) {
       hit++;
     }
-    for (var s = ray.length - 1; s >= 0; s--) {
-      var step = ray[s];
+    for (var s: number = ray.length - 1; s >= 0; s--) {
+      var step: Step = ray[s];
       if (s === hit) {
-        var textureX = Math.floor(texture.width * step.offset);
-        var wall = this.project(step.height, angle, step.distance);
+        var textureX: number = Math.floor(texture.width * step.offset);
+        var wall: Wall = this.project(step.height, angle, step.distance);
         context.drawImage(texture.image, textureX, 0, 1, texture.height,
             left, wall.top, width, wall.height);
       }
-
     }
   }
 
-  project(height: any, angle: any, distance: any) {
+  project(height: number, angle: number, distance: number): Wall {
     var z = distance * Math.cos(angle);
     var wallHeight = this.height * height / z;
     var bottom = this.height / 2 * (1 + 1 / z);
