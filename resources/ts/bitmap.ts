@@ -1,15 +1,19 @@
 "use strict";
 
-class Bitmap {
+module Engine.Bitmap {
 
-  image: HTMLImageElement;
-  width: number;
-  height: number;
+  export class Bitmap {
 
-  constructor(src: string, width: number, height: number) {
-    this.image = new Image();
-    this.image.src = src;
-    this.width = width;
-    this.height = height;
+    image: HTMLImageElement;
+    width: number;
+    height: number;
+
+    constructor(src: string, width: number, height: number) {
+      this.image = new Image();
+      this.image.src = src;
+      this.width = width;
+      this.height = height;
+    }
   }
+
 }

@@ -20,6 +20,7 @@
         "./resources/ts/gameloop.ts",
         "./resources/ts/main.ts",
         "./resources/ts/map.ts",
+        "./resources/ts/mouse.d.ts",
         "./resources/ts/player.ts",
         "./resources/ts/virtualkeys.ts"
     ],
