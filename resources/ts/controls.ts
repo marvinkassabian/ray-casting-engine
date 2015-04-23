@@ -2,7 +2,7 @@
 
 module Engine.Controls {
 
-  import virtualKeys = Engine.VirtualKeys.virtualKeys;
+  import VirtualKey = Engine.VirtualKey.VirtualKey;
 
   export interface Inputs {
     [input: string]: string;
@@ -19,21 +19,23 @@ module Engine.Controls {
 
     constructor() {
       this.inputs = {};
-      this.inputs['mouseLeft'] = 'turnLeft';
-      this.inputs['mouseRight'] = 'turnRight';
-      this.inputs[virtualKeys.VK_A] = 'left';
-      this.inputs[virtualKeys.VK_D] = 'right';
-      this.inputs[virtualKeys.VK_W] = 'forward';
-      this.inputs[virtualKeys.VK_S] = 'backward';
-      this.inputs[virtualKeys.VK_LEFT] = 'turnLeft';
-      this.inputs[virtualKeys.VK_RIGHT] = 'turnRight';
+      //this.inputs['mouseLeft'] = 'turnLeft';
+      //this.inputs['mouseRight'] = 'turnRight';
+      this.inputs[VirtualKey.VK_A] = 'left';
+      this.inputs[VirtualKey.VK_D] = 'right';
+      this.inputs[VirtualKey.VK_W] = 'forward';
+      this.inputs[VirtualKey.VK_S] = 'backward';
+      this.inputs[VirtualKey.VK_LEFT] = 'turnLeft';
+      this.inputs[VirtualKey.VK_RIGHT] = 'turnRight';
+      this.inputs[VirtualKey.VK_C] = 'crouching';
       this.states = {
         'left': false,
         'right': false,
         'forward': false,
         'backward': false,
         'turnLeft': false,
-        'turnRight': false
+        'turnRight': false,
+        'crouching': false
       };
       document.addEventListener('keydown',
           this.onKey.bind(this, true), false);
@@ -41,9 +43,9 @@ module Engine.Controls {
           this.onKey.bind(this, false), false);
       document.addEventListener('mousemove',
           this.onMouseMove.bind(this), false);
-      document.body.onclick = document.body.requestPointerLock ||
-          document.body.mozRequestPointerLock ||
-          document.body.webkitRequestPointerLock;
+      //document.body.onclick = document.body.requestPointerLock
+      //    || document.body.mozRequestPointerLock
+      //    || document.body.webkitRequestPointerLock;
     }
 
     onKey(val: boolean, e: KeyboardEvent): void {

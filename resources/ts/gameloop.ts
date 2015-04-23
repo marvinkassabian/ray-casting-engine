@@ -2,10 +2,10 @@
 
 module Engine.GameLoop {
 
-  export class GameLoop {
+  var DEFAULT_TIMESTEP: number = 1 / 30;
+  var MILLISECONDS_PER_SECOND: number = 1000;
 
-    private static DEFAULT_TIMESTEP: number = 1 / 30;
-    private static MILLISECONDS_PER_SECOND: number = 1000;
+  export class GameLoop {
 
     frameCallback: FrameRequestCallback;
     lastTime: number;
@@ -14,11 +14,11 @@ module Engine.GameLoop {
     updateCallback: Function;
     renderCallback: Function;
 
-    constructor() {
+    constructor(timestep: number = DEFAULT_TIMESTEP) {
       this.frameCallback = this.frame.bind(this);
       this.lastTime = 0;
       this.accumulator = 0;
-      this.timestep = GameLoop.DEFAULT_TIMESTEP;
+      this.timestep = timestep;
       this.updateCallback = function() {
       };
       this.renderCallback = function() {
@@ -33,7 +33,7 @@ module Engine.GameLoop {
     }
 
     frame(time: number) {
-      var seconds: number = (time - this.lastTime) / GameLoop.MILLISECONDS_PER_SECOND;
+      var seconds: number = (time - this.lastTime) / MILLISECONDS_PER_SECOND;
       this.lastTime = time;
       this.accumulator += seconds;
 

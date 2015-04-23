@@ -1,8 +1,8 @@
 "use strict";
 
-module Engine.VirtualKeys {
+module Engine.VirtualKey {
 
-  export enum virtualKeys {
+  export enum VirtualKey {
     /** Cancel key. */
     VK_CANCEL = 3,
     /** Help key. */

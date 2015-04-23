@@ -6,17 +6,17 @@ module Engine.Camera {
   import Step = Engine.GameMap.Step;
   import GameMap = Engine.GameMap.GameMap;
 
+  var CLARITY_FACTOR: number = 1;
+  var DEFAULT_FOCAL_LENGTH: number = 0.8;
+  var DEFAULT_RANGE: number = 10;
+  var CIRCLE: number = Math.PI * 2;
+
   export interface Wall {
     top: number;
     height: number;
   }
 
   export class Camera {
-
-    private static CLARITY_FACTOR: number = 0.5;
-    private static DEFAULT_FOCAL_LENGTH: number = 0.8;
-    private static DEFAULT_RANGE: number = 10;
-    private static CIRCLE: number = Math.PI * 2;
 
     context: CanvasRenderingContext2D;
     width: number;
@@ -27,14 +27,15 @@ module Engine.Camera {
     range: number;
 
     constructor(canvas: HTMLCanvasElement, resolution: number,
-        focalLength: number) {
+        focalLength: number = DEFAULT_FOCAL_LENGTH,
+        range: number = DEFAULT_RANGE) {
       this.context = canvas.getContext('2d');
-      this.width = canvas.width = window.innerWidth * Camera.CLARITY_FACTOR;
-      this.height = canvas.height = window.innerHeight * Camera.CLARITY_FACTOR;
+      this.width = canvas.width = window.innerWidth * CLARITY_FACTOR;
+      this.height = canvas.height = window.innerHeight * CLARITY_FACTOR;
       this.resolution = resolution;
       this.spacing = this.width / resolution;
-      this.focalLength = focalLength || Camera.DEFAULT_FOCAL_LENGTH;
-      this.range = Camera.DEFAULT_RANGE;
+      this.focalLength = focalLength;
+      this.range = range;
     }
 
     render(entity: Entity, map: GameMap): void {
@@ -44,11 +45,21 @@ module Engine.Camera {
 
     drawSky(direction: number, sky: Bitmap): void {
       var width: number = sky.width * (this.height / sky.height) * 2;
-      var left: number = (direction / Camera.CIRCLE) * -width;
+      var left: number = (direction / CIRCLE) * -width;
       this.context.save();
-      this.context.drawImage(sky.image, left, 0, width, this.height);
+      this.context.drawImage(
+          sky.image,    //image
+          left,         //offsetX
+          0,            //offsetY
+          width,        //width
+          this.height); //height
       if (left < width - this.width) {
-        this.context.drawImage(sky.image, left + width, 0, width, this.height);
+        this.context.drawImage(
+            sky.image,    //image
+            left + width, //offsetX
+            0,            //offsetY
+            width,        //width
+            this.height); //height
       }
       this.context.restore();
     }
@@ -59,12 +70,12 @@ module Engine.Camera {
         var x: number = column / this.resolution - 0.5;
         var angle: number = Math.atan2(x, this.focalLength);
         var ray: Step[] = map.cast(entity, entity.direction + angle, this.range);
-        this.drawColumn(column, ray, angle, map);
+        this.drawColumn(column, ray, angle, map, entity.getHeight());
       }
       this.context.restore();
     }
 
-    drawColumn(column: number, ray: Step[], angle: number, map: GameMap): void {
+    drawColumn(column: number, ray: Step[], angle: number, map: GameMap, cameraHeight: number): void {
       var context: CanvasRenderingContext2D = this.context;
       var texture: Bitmap = map.wallTexture;
       var left: number = Math.floor(column * this.spacing);
@@ -77,20 +88,28 @@ module Engine.Camera {
         var step: Step = ray[s];
         if (s === hit) {
           var textureX: number = Math.floor(texture.width * step.offset);
-          var wall: Wall = this.project(step.height, angle, step.distance);
-          context.drawImage(texture.image, textureX, 0, 1, texture.height,
-              left, wall.top, width, wall.height);
+          var wall: Wall = this.project(step.height, angle, step.distance, cameraHeight);
+          context.drawImage(
+              texture.image,  //image
+              textureX,       //offsetX
+              0,              //offsetY
+              1,              //width
+              texture.height, //height
+              left,           //canvasOffsetX
+              wall.top,       //canvasOffsetY
+              width,          //canvasImageWidth
+              wall.height);   //canvasImageHeight
         }
       }
     }
 
-    project(height: number, angle: number, distance: number): Wall {
+    project(height: number, angle: number, distance: number, cameraHeight: number): Wall {
       var z = distance * Math.cos(angle);
       var wallHeight = this.height * height / z;
       var bottom = this.height / 2 * (1 + 1 / z);
       return {
-        top: bottom - wallHeight,
-        height: wallHeight
+        top: bottom - (wallHeight / cameraHeight),
+        height: (wallHeight * cameraHeight)
       };
     }
   }

@@ -4,8 +4,13 @@ module Engine.GameMap {
 
   import Bitmap = Engine.Bitmap.Bitmap;
 
+  var DEFAULT_WALL_PROBABILITY: number = 0.3;
+  var NO_WALL: Step = {
+    length: Infinity
+  };
+
   export interface Step {
-    length: number;
+    length?: number;
     x?: number;
     y?: number;
     height?: number;
@@ -15,11 +20,6 @@ module Engine.GameMap {
 
   export class GameMap {
 
-    private static DEFAULT_WALL_PROBABILITY: number = 0.3;
-    private static NO_WALL: Step = {
-      length: Infinity
-    };
-
     size: number;
     wallGrid: Uint8Array;
     skybox: Bitmap;
@@ -28,8 +28,12 @@ module Engine.GameMap {
     constructor(size: number) {
       this.size = size;
       this.wallGrid = new Uint8Array(size * size);
-      this.skybox = new Bitmap('resources/images/sky_texture.png', 128, 64);
-      this.wallTexture = new Bitmap('resources/images/wall_texture.png', 640, 640);
+      this.skybox =
+          //new Bitmap('resources/images/deathvalley_panorama.jpg', 2000, 750);
+          new Bitmap('resources/images/sky_texture.png', 128, 64);
+      this.wallTexture =
+          //new Bitmap('resources/images/wall_texture.jpg', 1024, 1024);
+          new Bitmap('resources/images/wall_texture.png', 640, 640);
     }
 
     get(x: number, y: number): number {
@@ -43,14 +47,15 @@ module Engine.GameMap {
       }
     }
 
-    randomize(probability?: number): void {
-      var wallProbability: number = probability || GameMap.DEFAULT_WALL_PROBABILITY;
+    randomize(probability: number = DEFAULT_WALL_PROBABILITY): void {
+      var wallProbability: number = probability;
       for (var i: number = 0; i < (this.size * this.size); i++) {
         this.wallGrid[i] = (Math.random() < wallProbability ? 1 : 0);
       }
     }
 
     cast(point: Entity, angle: number, range: number): Step[] {
+      var self: GameMap = this;
       var sin: number = Math.sin(angle);
       var cos: number = Math.cos(angle);
 
@@ -58,19 +63,8 @@ module Engine.GameMap {
         x: point.x,
         y: point.y,
         height: 0,
-        distance: 0,
-        length: 0
+        distance: 0
       };
-
-      var inspect = (step: Step, shiftX: number, shiftY: number, distance: number, offset: number): Step => {
-        var dx: number = cos < 0 ? shiftX : 0;
-        var dy: number = sin < 0 ? shiftY : 0;
-
-        step.height = this.get(step.x - dx, step.y - dy);
-        step.distance = distance + Math.sqrt(step.length);
-        step.offset = offset - Math.floor(offset);
-        return step;
-      }
 
       return ray(origin);
 
@@ -88,9 +82,10 @@ module Engine.GameMap {
         }
       }
 
-      function step(rise: number, run: number, x: number, y: number, inverted: boolean): Step {
+      function step(rise: number, run: number, x: number,
+          y: number, inverted: boolean): Step {
         if (run === 0) {
-          return GameMap.NO_WALL;
+          return NO_WALL;
         }
 
         var dx: number = (run > 0) ?
@@ -105,6 +100,17 @@ module Engine.GameMap {
         };
 
         return nextStep;
+      }
+
+      function inspect(step: Step, shiftX: number, shiftY: number,
+          distance: number, offset: number): Step {
+        var dx: number = cos < 0 ? shiftX : 0;
+        var dy: number = sin < 0 ? shiftY : 0;
+
+        step.height = self.get(step.x - dx, step.y - dy);
+        step.distance = distance + Math.sqrt(step.length);
+        step.offset = offset - Math.floor(offset);
+        return step;
       }
     }
   }
