@@ -5,11 +5,11 @@ module Engine.Player {
   import States = Engine.Controls.States;
   import GameMap = Engine.GameMap.GameMap;
 
-  export class Player {
+  export class Player implements Entity {
 
     private static CIRCLE: number = Math.PI * 2;
-    private static movementSpeed: number = 2.4;
-    private static rotateSpeed: number = 0.7;
+    private static MOVEMENT_SPEED: number = 2.4;
+    private static ROTATE_SPEED: number = 0.7;
 
     x: number;
     y: number;
@@ -37,24 +37,24 @@ module Engine.Player {
       }
     }
 
-    update(controls: States, map: GameMap, seconds: number): void {// Figure out controls' type
-      if (controls['left']) {
-        this.walk(Player.movementSpeed * seconds, map, (Player.CIRCLE * 3 / 4));
+    update(states: States, map: GameMap, seconds: number): void {// Figure out controls' type
+      if (states['left']) {
+        this.walk(Player.MOVEMENT_SPEED * seconds, map, (Player.CIRCLE * 3 / 4));
       }
-      if (controls['right']) {
-        this.walk(Player.movementSpeed * seconds, map, (Player.CIRCLE / 4));
+      if (states['right']) {
+        this.walk(Player.MOVEMENT_SPEED * seconds, map, (Player.CIRCLE / 4));
       }
-      if (controls['forward']) {
-        this.walk(Player.movementSpeed * seconds, map, 0);
+      if (states['forward']) {
+        this.walk(Player.MOVEMENT_SPEED * seconds, map, 0);
       }
-      if (controls['backward']) {
-        this.walk(Player.movementSpeed * seconds, map, (Player.CIRCLE / 2));
+      if (states['backward']) {
+        this.walk(Player.MOVEMENT_SPEED * seconds, map, (Player.CIRCLE / 2));
       }
-      if (controls['turnLeft']) {
-        this.rotate(-1 * Player.rotateSpeed * Math.PI * seconds);
+      if (states['turnLeft']) {
+        this.rotate(-1 * Player.ROTATE_SPEED * Math.PI * seconds);
       }
-      if (controls['turnRight']) {
-        this.rotate(Player.rotateSpeed * Math.PI * seconds);
+      if (states['turnRight']) {
+        this.rotate(Player.ROTATE_SPEED * Math.PI * seconds);
       }
     }
   }

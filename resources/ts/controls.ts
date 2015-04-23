@@ -1,7 +1,5 @@
 "use strict";
 
-///<reference path="mouse.d.ts" />
-
 module Engine.Controls {
 
   import virtualKeys = Engine.VirtualKeys.virtualKeys;

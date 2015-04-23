@@ -15,5 +15,4 @@ module Engine.Bitmap {
       this.height = height;
     }
   }
-
 }

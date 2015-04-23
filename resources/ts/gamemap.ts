@@ -3,7 +3,6 @@
 module Engine.GameMap {
 
   import Bitmap = Engine.Bitmap.Bitmap;
-  import Player = Engine.Player.Player;
 
   export interface Step {
     length: number;
@@ -16,8 +15,8 @@ module Engine.GameMap {
 
   export class GameMap {
 
-    private static defaultWallProbability: number = 0.3;
-    private static noWall: Step = {
+    private static DEFAULT_WALL_PROBABILITY: number = 0.3;
+    private static NO_WALL: Step = {
       length: Infinity
     };
 
@@ -45,13 +44,13 @@ module Engine.GameMap {
     }
 
     randomize(probability?: number): void {
-      var wallProbability: number = probability || GameMap.defaultWallProbability;
+      var wallProbability: number = probability || GameMap.DEFAULT_WALL_PROBABILITY;
       for (var i: number = 0; i < (this.size * this.size); i++) {
         this.wallGrid[i] = (Math.random() < wallProbability ? 1 : 0);
       }
     }
 
-    cast(point: Player, angle: number, range: number): Step[] {
+    cast(point: Entity, angle: number, range: number): Step[] {
       var sin: number = Math.sin(angle);
       var cos: number = Math.cos(angle);
 
@@ -91,7 +90,7 @@ module Engine.GameMap {
 
       function step(rise: number, run: number, x: number, y: number, inverted: boolean): Step {
         if (run === 0) {
-          return GameMap.noWall;
+          return GameMap.NO_WALL;
         }
 
         var dx: number = (run > 0) ?
@@ -107,9 +106,6 @@ module Engine.GameMap {
 
         return nextStep;
       }
-    }
-
-    update(timestep: number): void {
     }
   }
 }

@@ -15,7 +15,7 @@ module.exports = function(grunt) {
             'resources/js/player.js',
             'resources/js/controls.js',
             'resources/js/bitmap.js',
-            'resources/js/map.js',
+            'resources/js/gamemap.js',
             'resources/js/camera.js',
             'resources/js/gameloop.js',
             'resources/js/main.js']
