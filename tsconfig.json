@@ -1,0 +1,30 @@
+{
+    "version": "1.4.1",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "outDir": "./resources/js"
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "!./node_modules/**/*.ts"
+    ],
+    "files": [
+        "./resources/ts/bitmap.ts",
+        "./resources/ts/camera.ts",
+        "./resources/ts/controls.ts",
+        "./resources/ts/entity.d.ts",
+        "./resources/ts/gameloop.ts",
+        "./resources/ts/gamemap.ts",
+        "./resources/ts/htmlelement.d.ts",
+        "./resources/ts/main.ts",
+        "./resources/ts/mouseevent.d.ts",
+        "./resources/ts/player.ts",
+        "./resources/ts/virtualkeys.ts"
+    ],
+    "compileOnSave": true
+}
