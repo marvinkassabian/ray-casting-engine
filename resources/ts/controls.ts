@@ -56,7 +56,7 @@ module Engine.Controls {
           || document.body.webkitRequestPointerLock;
     }
 
-    onKey(val: boolean, e: KeyboardEvent): void {
+    private onKey(val: boolean, e: KeyboardEvent): void {
       var state = this.inputs[e.keyCode];
       if (typeof state === 'undefined') {
         return;
@@ -70,7 +70,7 @@ module Engine.Controls {
       }
     }
 
-    onMouseMove(e: MouseEvent) {
+    private onMouseMove(e: MouseEvent) {
       var leftState = this.inputs['mouseLeft'];
       var rightState = this.inputs['mouseRight'];
       var upState = this.inputs['mouseUp'];
@@ -93,7 +93,7 @@ module Engine.Controls {
       }, 10);
     }
 
-    onMouseMoveEnd(e: MouseEvent) {
+    private onMouseMoveEnd(e: MouseEvent) {
       var leftState = this.inputs['mouseLeft'];
       var rightState = this.inputs['mouseRight'];
       var upState = this.inputs['mouseUp'];

@@ -32,7 +32,7 @@ module Engine.GameLoop {
       window.requestAnimationFrame(this.frameCallback);
     }
 
-    frame(time: number) {
+    private frame(time: number) {
       var seconds: number = (time - this.lastTime) / MILLISECONDS_PER_SECOND;
       this.lastTime = time;
       this.accumulator += seconds;

@@ -46,7 +46,7 @@ module Engine.Camera {
       this.drawColumns(entity, map);
     }
 
-    drawSky(direction: number, sky: Bitmap, heightInfo: RenderingInformation): void {
+    private drawSky(direction: number, sky: Bitmap, heightInfo: RenderingInformation): void {
       var width: number = sky.width * (this.height / sky.height) + HORIZONTAL_BUFFER;
       var left: number = (direction / CIRCLE) * -width;
       this.context.save();
@@ -67,7 +67,7 @@ module Engine.Camera {
       this.context.restore();
     }
 
-    drawColumns(entity: Entity, map: GameMap): void {
+    private drawColumns(entity: Entity, map: GameMap): void {
       this.context.save();
       for (var column: number = 0; column < this.resolution; column++) {
         var x: number = column / this.resolution - 0.5;
@@ -78,7 +78,7 @@ module Engine.Camera {
       this.context.restore();
     }
 
-    drawColumn(column: number, ray: Step[], angle: number, map: GameMap,
+    private drawColumn(column: number, ray: Step[], angle: number, map: GameMap,
         heightInfo: RenderingInformation): void {
       var context: CanvasRenderingContext2D = this.context;
       var texture: Bitmap = map.wallTexture;
@@ -107,7 +107,7 @@ module Engine.Camera {
       }
     }
 
-    project(height: number, angle: number, distance: number): Wall {
+    private project(height: number, angle: number, distance: number): Wall {
       var z = distance * Math.cos(angle);
       var wallHeight = this.height * height / z;
       var bottom = this.height / 2 * (1 + 1 / z);
