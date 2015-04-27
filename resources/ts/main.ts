@@ -10,7 +10,7 @@ module Engine.Main {
 
   export function exec(): void {
     var display: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('display');
-    var player: Player = new Player(15.3, -1.2, Math.PI * 0.3);
+    var player: Player = new Player(15.3, -1.2, Math.PI * 0.3, 1);
     var map: GameMap = new GameMap(32);
     var controls: Controls = new Controls();
     var camera: Camera = new Camera(display, 240, 0.6);

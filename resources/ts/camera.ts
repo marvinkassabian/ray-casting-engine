@@ -10,6 +10,8 @@ module Engine.Camera {
   var DEFAULT_FOCAL_LENGTH: number = 0.8;
   var DEFAULT_RANGE: number = 10;
   var CIRCLE: number = Math.PI * 2;
+  var VERTICAL_BUFFER: number = 3000;
+  var HORIZONTAL_BUFFER: number;
 
   export interface Wall {
     top: number;
@@ -36,30 +38,31 @@ module Engine.Camera {
       this.spacing = this.width / resolution;
       this.focalLength = focalLength;
       this.range = range;
+      HORIZONTAL_BUFFER = VERTICAL_BUFFER * (this.width / this.height);
     }
 
     render(entity: Entity, map: GameMap): void {
-      this.drawSky(entity.direction, map.skybox);
+      this.drawSky(entity.direction, map.skybox, entity.getHeightInformation());
       this.drawColumns(entity, map);
     }
 
-    drawSky(direction: number, sky: Bitmap): void {
-      var width: number = sky.width * (this.height / sky.height) * 2;
+    drawSky(direction: number, sky: Bitmap, heightInfo: RenderingInformation): void {
+      var width: number = sky.width * (this.height / sky.height) + HORIZONTAL_BUFFER;
       var left: number = (direction / CIRCLE) * -width;
       this.context.save();
-      this.context.drawImage(
-          sky.image,    //image
-          left,         //offsetX
-          0,            //offsetY
-          width,        //width
-          this.height); //height
-      if (left < width - this.width) {
+
+      var drawSkyPartial = (canvasOffsetX: number): void => {
         this.context.drawImage(
-            sky.image,    //image
-            left + width, //offsetX
-            0,            //offsetY
-            width,        //width
-            this.height); //height
+            sky.image, //image
+            canvasOffsetX, //canvasOffsetX
+            heightInfo.viewModifier - (VERTICAL_BUFFER / 2), //canvasOffsetY
+            width, //canvasImageWidth
+            this.height + VERTICAL_BUFFER); //canvasImageHeight
+      }
+
+      drawSkyPartial(left);
+      if (left < width - this.width) {
+        drawSkyPartial(left + width);
       }
       this.context.restore();
     }
@@ -70,12 +73,13 @@ module Engine.Camera {
         var x: number = column / this.resolution - 0.5;
         var angle: number = Math.atan2(x, this.focalLength);
         var ray: Step[] = map.cast(entity, entity.direction + angle, this.range);
-        this.drawColumn(column, ray, angle, map, entity.getHeight());
+        this.drawColumn(column, ray, angle, map, entity.getHeightInformation());
       }
       this.context.restore();
     }
 
-    drawColumn(column: number, ray: Step[], angle: number, map: GameMap, cameraHeight: number): void {
+    drawColumn(column: number, ray: Step[], angle: number, map: GameMap,
+        heightInfo: RenderingInformation): void {
       var context: CanvasRenderingContext2D = this.context;
       var texture: Bitmap = map.wallTexture;
       var left: number = Math.floor(column * this.spacing);
@@ -88,28 +92,29 @@ module Engine.Camera {
         var step: Step = ray[s];
         if (s === hit) {
           var textureX: number = Math.floor(texture.width * step.offset);
-          var wall: Wall = this.project(step.height, angle, step.distance, cameraHeight);
+          var wall: Wall = this.project(step.height, angle, step.distance);
           context.drawImage(
-              texture.image,  //image
-              textureX,       //offsetX
-              0,              //offsetY
-              1,              //width
+              texture.image, //image
+              textureX, //offsetX
+              0, //offsetY
+              1, //width
               texture.height, //height
-              left,           //canvasOffsetX
-              wall.top,       //canvasOffsetY
-              width,          //canvasImageWidth
-              wall.height);   //canvasImageHeight
+              left, //canvasOffsetX
+              wall.top + heightInfo.viewModifier, //canvasOffsetY
+              width, //canvasImageWidth
+              wall.height); //canvasImageHeight
         }
       }
     }
 
-    project(height: number, angle: number, distance: number, cameraHeight: number): Wall {
+    project(height: number, angle: number, distance: number): Wall {
       var z = distance * Math.cos(angle);
       var wallHeight = this.height * height / z;
       var bottom = this.height / 2 * (1 + 1 / z);
+
       return {
-        top: bottom - (wallHeight / cameraHeight),
-        height: (wallHeight * cameraHeight)
+        top: bottom - wallHeight,
+        height: wallHeight
       };
     }
   }

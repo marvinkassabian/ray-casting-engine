@@ -2,5 +2,12 @@ interface Entity {
   x: number;
   y: number;
   direction: number;
-  getHeight(): number;
+  getHeightInformation(): RenderingInformation;
+}
+
+interface RenderingInformation {
+  height: number;
+  jumpModifier: number;
+  crouchModifier: number;
+  viewModifier: number;
 }

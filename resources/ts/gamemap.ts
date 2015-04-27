@@ -29,11 +29,11 @@ module Engine.GameMap {
       this.size = size;
       this.wallGrid = new Uint8Array(size * size);
       this.skybox =
-          //new Bitmap('resources/images/deathvalley_panorama.jpg', 2000, 750);
-          new Bitmap('resources/images/sky_texture.png', 128, 64);
+          new Bitmap('resources/images/deathvalley_panorama.jpg', 2000, 750);
+          //new Bitmap('resources/images/sky_texture.png', 128, 64);
       this.wallTexture =
-          //new Bitmap('resources/images/wall_texture.jpg', 1024, 1024);
-          new Bitmap('resources/images/wall_texture.png', 640, 640);
+          new Bitmap('resources/images/wall_texture.jpg', 1024, 1024);
+          //new Bitmap('resources/images/wall_texture.png', 640, 640);
     }
 
     get(x: number, y: number): number {
