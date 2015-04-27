@@ -31,20 +31,14 @@ module Engine.Controls {
       this.inputs[VirtualKey.VK_RIGHT] = 'turnRight';
       this.inputs[VirtualKey.VK_UP] = 'lookUp';
       this.inputs[VirtualKey.VK_DOWN] = 'lookDown';
-      this.inputs[VirtualKey.VK_C] = 'crouch';
+      this.inputs[VirtualKey.VK_X] = 'crouch';
       this.inputs[VirtualKey.VK_SPACE] = 'jump';
-      this.states = {
-        'left': false,
-        'right': false,
-        'forward': false,
-        'backward': false,
-        'turnLeft': false,
-        'turnRight': false,
-        'lookUp': false,
-        'lookDown': false,
-        'crouch': false,
-        'jump': false
-      };
+
+      this.states = {};
+      _.each(_.values(this.inputs), (value):void => {
+        this.states[value] = false;
+      });
+
       document.addEventListener('keydown',
           this.onKey.bind(this, true), false);
       document.addEventListener('keyup',

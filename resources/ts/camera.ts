@@ -5,11 +5,11 @@ module Engine.Camera {
   import Bitmap = Engine.Bitmap.Bitmap;
   import Step = Engine.GameMap.Step;
   import GameMap = Engine.GameMap.GameMap;
+  import CIRCLE = Engine.Util.CIRCLE;
 
   var CLARITY_FACTOR: number = 1;
   var DEFAULT_FOCAL_LENGTH: number = 0.8;
   var DEFAULT_RANGE: number = 10;
-  var CIRCLE: number = Math.PI * 2;
   var VERTICAL_BUFFER: number = 3000;
   var HORIZONTAL_BUFFER: number;
 

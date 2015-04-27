@@ -7,10 +7,11 @@ module.exports = function(grunt) {
       my_target : {
         options : {
           sourceMap : true,
-          sourceMapName : 'resources/js/raycaster.min.js.map'
+          sourceMapName : 'resources/js/raycaster.min.map'
         },
         files : {
           'resources/js/raycaster.min.js' : [
+            'resources/js/util.js',
             'resources/js/virtualkeys.js',
             'resources/js/player.js',
             'resources/js/controls.js',
@@ -24,7 +25,7 @@ module.exports = function(grunt) {
     },
     typescript: {
       base: {
-        src: ['resources/ts/*.ts'],
+        src: ['resources/**/*.ts', 'vendors/**/*.ts'],
         dest: 'resources/js',
         options: {
           module: 'amd',

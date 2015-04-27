@@ -21,9 +21,11 @@
         "./resources/ts/gameloop.ts",
         "./resources/ts/gamemap.ts",
         "./resources/ts/htmlelement.d.ts",
+        "./resources/ts/lib/underscore.d.ts",
         "./resources/ts/main.ts",
         "./resources/ts/mouseevent.d.ts",
         "./resources/ts/player.ts",
+        "./resources/ts/util.ts",
         "./resources/ts/virtualkeys.ts"
     ],
     "compileOnSave": true

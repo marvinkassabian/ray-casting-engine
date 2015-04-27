@@ -4,17 +4,21 @@ module Engine.Player {
 
   import States = Engine.Controls.States;
   import GameMap = Engine.GameMap.GameMap;
+  import CIRCLE = Engine.Util.CIRCLE; //Change to import Util?
+  import clamp = Engine.Util.clamp; //Change to import Util?
 
-  var CIRCLE: number = Math.PI * 2;
   var MOVEMENT_SPEED: number = 2.4;
   var HORIZONTAL_VIEW_SPEED: number = 1.2;
+  var VERTICAL_VIEW_SPEED: number = 1000;
   var CROUCH_SPEED: number = 2;
-  var VERTICAL_VIEW_SPEED: number = 600;
   var DEFAULT_HEIGHT: number = 1;
-  var MAX_CROUCH_MOD: number = 1;
-  var MIN_CROUCH_MOD: number = 0.85;
-  var MAX_JUMP_MOD: number = 1.2;
-  var MIN_JUMP_MOD: number = 1;
+  //Modularize
+  var MAX_CROUCH_MOD: number = 0;
+  var MIN_CROUCH_MOD: number = 0;
+  var MAX_JUMP_MOD: number = 0;
+  var MIN_JUMP_MOD: number = 0;
+  var MAX_VIEW_MOD: number = 1000;
+  var MIN_VIEW_MOD: number = -1000;
 
   export class Player implements Entity {
 
@@ -33,9 +37,9 @@ module Engine.Player {
       this.y = y;
       this.direction = direction;
       this.playerHeight = height;
-      this.crouchModifier = 1;
-      this.jumpModifier = 1;
-      this.viewModifier = 1;
+      this.crouchModifier = 0;
+      this.jumpModifier = 0;
+      this.viewModifier = 0;
       this.jumping = false;
     }
 
@@ -55,24 +59,21 @@ module Engine.Player {
       }
     }
 
+    //Modularize these methods
     private changeCrouchModifier(delta: number): void {
-      this.crouchModifier = this.clamp(this.crouchModifier + delta, MIN_CROUCH_MOD, MAX_CROUCH_MOD);
+      this.crouchModifier = clamp(this.crouchModifier + delta, MIN_CROUCH_MOD, MAX_CROUCH_MOD);
     }
 
     private changeJumpModifier(delta: number): void {
-      this.jumpModifier = this.clamp(this.jumpModifier + delta, MIN_JUMP_MOD, MAX_JUMP_MOD);
+      this.jumpModifier = clamp(this.jumpModifier + delta, MIN_JUMP_MOD, MAX_JUMP_MOD);
     }
 
     private changeViewModifier(delta: number) {
-      this.viewModifier += delta;
-    }
-
-    private clamp(baseNumber: number, lowerBound: number, upperBound: number): number {
-      var tempNumber = Math.max(baseNumber, lowerBound);
-      return Math.min(tempNumber, upperBound);
+      this.viewModifier = clamp(this.viewModifier + delta, MIN_VIEW_MOD, MAX_VIEW_MOD);
     }
 
     update(states: States, map: GameMap, timestep: number): void {
+      console.log(1);
       if (states['left']) {
         this.walk(MOVEMENT_SPEED * timestep, map, (CIRCLE * 3 / 4));
       }
