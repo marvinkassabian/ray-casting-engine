@@ -4,21 +4,47 @@ module Engine.Player {
 
   import States = Engine.Controls.States;
   import GameMap = Engine.GameMap.GameMap;
-  import CIRCLE = Engine.Util.CIRCLE; //Change to import Util?
-  import clamp = Engine.Util.clamp; //Change to import Util?
+  import Util = Engine.Util;
 
   var MOVEMENT_SPEED: number = 2.4;
   var HORIZONTAL_VIEW_SPEED: number = 1.2;
   var VERTICAL_VIEW_SPEED: number = 1000;
-  var CROUCH_SPEED: number = 2;
+  var CROUCH_SPEED: number = 500;
+  var JUMP_SPEED: number = 400;
   var DEFAULT_HEIGHT: number = 1;
   //Modularize
   var MAX_CROUCH_MOD: number = 0;
-  var MIN_CROUCH_MOD: number = 0;
-  var MAX_JUMP_MOD: number = 0;
+  var MIN_CROUCH_MOD: number = -50;
+  var MAX_JUMP_MOD: number = 1000;
   var MIN_JUMP_MOD: number = 0;
   var MAX_VIEW_MOD: number = 1000;
   var MIN_VIEW_MOD: number = -1000;
+
+  enum Direction {
+    FORWARD = 1,
+    RIGHT = 2,
+    BACKWARD = 4,
+    LEFT = 8
+  }
+
+  var DIRECTION_TABLE = {
+    0: Infinity,
+    1: (0 / 8) * Util.CIRCLE,
+    2: (2 / 8) * Util.CIRCLE,
+    3: (1 / 8) * Util.CIRCLE,
+    4: (4 / 8) * Util.CIRCLE,
+    5: Infinity,
+    6: (3 / 8) * Util.CIRCLE,
+    7: (2 / 8) * Util.CIRCLE,
+    8: (6 / 8) * Util.CIRCLE,
+    9: (7 / 8) * Util.CIRCLE,
+    10: Infinity,
+    11: (0 / 8) * Util.CIRCLE,
+    12: (5 / 8) * Util.CIRCLE,
+    13: (6 / 8) * Util.CIRCLE,
+    14: (4 / 8) * Util.CIRCLE,
+    15: Infinity
+  };
 
   export class Player implements Entity {
 
@@ -30,6 +56,9 @@ module Engine.Player {
     jumpModifier: number;
     viewModifier: number;
     jumping: boolean;
+    moveWhileJumping; boolean;
+    jumpDirection: number;
+    verticalVelocity: number;
 
     constructor(x: number, y: number, direction: number,
         height: number = DEFAULT_HEIGHT) {
@@ -40,16 +69,21 @@ module Engine.Player {
       this.crouchModifier = 0;
       this.jumpModifier = 0;
       this.viewModifier = 0;
-      this.jumping = false;
+      this.verticalVelocity = 0;
+      this.moveWhileJumping = false;
     }
 
     private rotate(angle: number): void {
-      this.direction = (this.direction + angle + CIRCLE) % (CIRCLE);
+      this.direction = (this.direction + angle + Util.CIRCLE) % (Util.CIRCLE);
     }
 
     private walk(distance: number, map: GameMap, direction: number): void {
-      var dx: number = Math.cos(this.direction + direction) * distance;
-      var dy: number = Math.sin(this.direction + direction) * distance;
+      this.move(distance ,map, this.direction + direction);
+    }
+
+    private move(distance: number, map: GameMap, direction: number): void {
+      var dx: number = Math.cos(direction) * distance;
+      var dy: number = Math.sin(direction) * distance;
 
       if (map.get(this.x + dx, this.y) <= 0) {
         this.x += dx;
@@ -61,31 +95,42 @@ module Engine.Player {
 
     //Modularize these methods
     private changeCrouchModifier(delta: number): void {
-      this.crouchModifier = clamp(this.crouchModifier + delta, MIN_CROUCH_MOD, MAX_CROUCH_MOD);
+      this.crouchModifier = Util.clamp(this.crouchModifier + delta, MIN_CROUCH_MOD, MAX_CROUCH_MOD);
     }
 
     private changeJumpModifier(delta: number): void {
-      this.jumpModifier = clamp(this.jumpModifier + delta, MIN_JUMP_MOD, MAX_JUMP_MOD);
+      this.jumpModifier = Util.clamp(this.jumpModifier + delta, MIN_JUMP_MOD, MAX_JUMP_MOD);
     }
 
     private changeViewModifier(delta: number) {
-      this.viewModifier = clamp(this.viewModifier + delta, MIN_VIEW_MOD, MAX_VIEW_MOD);
+      this.viewModifier = Util.clamp(this.viewModifier + delta, MIN_VIEW_MOD, MAX_VIEW_MOD);
     }
 
     update(states: States, map: GameMap, timestep: number): void {
-      console.log(1);
-      if (states['left']) {
-        this.walk(MOVEMENT_SPEED * timestep, map, (CIRCLE * 3 / 4));
+      var jumpDirection = 0;
+      var moveWhileJumping = false;
+
+      if (states['left'] && this.onGround()) {
+        this.walk(MOVEMENT_SPEED * timestep, map, (Util.CIRCLE * 3 / 4));
+        moveWhileJumping = true;
+        jumpDirection += Direction.LEFT;
       }
-      if (states['right']) {
-        this.walk(MOVEMENT_SPEED * timestep, map, (CIRCLE / 4));
+      if (states['right'] && this.onGround()) {
+        this.walk(MOVEMENT_SPEED * timestep, map, (Util.CIRCLE / 4));
+        moveWhileJumping = true;
+        jumpDirection += Direction.RIGHT;
       }
-      if (states['forward']) {
-        this.walk(MOVEMENT_SPEED * timestep, map, 0);
+      if (states['forward'] && this.onGround()) {
+        this.walk(MOVEMENT_SPEED * timestep, map, Util.CIRCLE);
+        moveWhileJumping = true;
+        jumpDirection += Direction.FORWARD;
       }
-      if (states['backward']) {
-        this.walk(MOVEMENT_SPEED * timestep, map, (CIRCLE / 2));
+      if (states['backward'] && this.onGround()) {
+        this.walk(MOVEMENT_SPEED * timestep, map, (Util.CIRCLE / 2));
+        moveWhileJumping = true;
+        jumpDirection += Direction.BACKWARD;
       }
+
       if (states['turnLeft']) {
         this.rotate(-1 * HORIZONTAL_VIEW_SPEED * Math.PI * timestep);
       }
@@ -103,16 +148,28 @@ module Engine.Player {
       } else {
         this.changeCrouchModifier(CROUCH_SPEED * timestep);
       }
+
       if (states['jump']) {
-        this.changeJumpModifier(CROUCH_SPEED * timestep);
-      } else {
-        this.changeJumpModifier(-1 * CROUCH_SPEED * timestep);
+        if (this.onGround()) {
+          this.verticalVelocity = 5;
+          jumpDirection = DIRECTION_TABLE[jumpDirection];
+          this.jumpDirection = jumpDirection + this.direction;
+          this.moveWhileJumping = (jumpDirection !== Infinity) ? moveWhileJumping : false;
+        }
       }
+
+      if (!this.onGround()) {
+        if (this.moveWhileJumping) {
+          this.move(MOVEMENT_SPEED * timestep, map, this.jumpDirection);
+        }
+      }
+
+      this.verticalVelocity -= timestep * 15;
+      this.changeJumpModifier(JUMP_SPEED * timestep * this.verticalVelocity);
     }
 
     getHeightInformation(): RenderingInformation {
       return {
-        height: this.playerHeight,
         crouchModifier: this.crouchModifier,
         jumpModifier: this.jumpModifier,
         viewModifier: this.viewModifier
@@ -123,4 +180,6 @@ module Engine.Player {
       return this.jumpModifier === MIN_JUMP_MOD;
     }
   }
+
+
 }

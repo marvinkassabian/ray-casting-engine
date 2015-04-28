@@ -5,7 +5,7 @@ module Engine.Camera {
   import Bitmap = Engine.Bitmap.Bitmap;
   import Step = Engine.GameMap.Step;
   import GameMap = Engine.GameMap.GameMap;
-  import CIRCLE = Engine.Util.CIRCLE;
+  import Util = Engine.Util;
 
   var CLARITY_FACTOR: number = 1;
   var DEFAULT_FOCAL_LENGTH: number = 0.8;
@@ -48,16 +48,16 @@ module Engine.Camera {
 
     private drawSky(direction: number, sky: Bitmap, heightInfo: RenderingInformation): void {
       var width: number = sky.width * (this.height / sky.height) + HORIZONTAL_BUFFER;
-      var left: number = (direction / CIRCLE) * -width;
+      var left: number = (direction / Util.CIRCLE) * -width;
       this.context.save();
 
       var drawSkyPartial = (canvasOffsetX: number): void => {
         this.context.drawImage(
             sky.image, //image
             canvasOffsetX, //canvasOffsetX
-            heightInfo.viewModifier - (VERTICAL_BUFFER / 2), //canvasOffsetY
+            heightInfo.viewModifier - (VERTICAL_BUFFER / 2) + heightInfo.crouchModifier + heightInfo.jumpModifier, //canvasOffsetY
             width, //canvasImageWidth
-            this.height + VERTICAL_BUFFER); //canvasImageHeight
+            this.height + VERTICAL_BUFFER + heightInfo.crouchModifier + heightInfo.jumpModifier); //canvasImageHeight
       }
 
       drawSkyPartial(left);
@@ -100,9 +100,9 @@ module Engine.Camera {
               1, //width
               texture.height, //height
               left, //canvasOffsetX
-              wall.top + heightInfo.viewModifier, //canvasOffsetY
+              wall.top + heightInfo.viewModifier + heightInfo.crouchModifier + heightInfo.jumpModifier, //canvasOffsetY
               width, //canvasImageWidth
-              wall.height); //canvasImageHeight
+              wall.height + heightInfo.crouchModifier + heightInfo.jumpModifier); //canvasImageHeight
         }
       }
     }

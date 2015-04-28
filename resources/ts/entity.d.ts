@@ -6,7 +6,6 @@ interface Entity {
 }
 
 interface RenderingInformation {
-  height: number;
   jumpModifier: number;
   crouchModifier: number;
   viewModifier: number;
