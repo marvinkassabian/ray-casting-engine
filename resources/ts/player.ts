@@ -10,7 +10,8 @@ module Engine.Player {
   var HORIZONTAL_VIEW_SPEED: number = 1.2;
   var VERTICAL_VIEW_SPEED: number = 1000;
   var CROUCH_SPEED: number = 500;
-  var JUMP_SPEED: number = 400;
+  var JUMP_HEIGHT: number = 50;
+  var JUMP_SPEED: number = 2;
   var DEFAULT_HEIGHT: number = 1;
   //Modularize
   var MAX_CROUCH_MOD: number = 0;
@@ -26,6 +27,12 @@ module Engine.Player {
     BACKWARD = 4,
     LEFT = 8
   }
+
+  var DIRECTION_STATE_TABLE = {};
+  DIRECTION_STATE_TABLE[Direction.LEFT] = 'left';
+  DIRECTION_STATE_TABLE[Direction.RIGHT] = 'right';
+  DIRECTION_STATE_TABLE[Direction.FORWARD] = 'forward';
+  DIRECTION_STATE_TABLE[Direction.BACKWARD] = 'backward';
 
   var DIRECTION_TABLE = {
     0: Infinity,
@@ -107,28 +114,15 @@ module Engine.Player {
     }
 
     update(states: States, map: GameMap, timestep: number): void {
-      var jumpDirection = 0;
+      var jumpDirection: number = 0;
       var moveWhileJumping = false;
 
-      if (states['left'] && this.onGround()) {
-        this.walk(MOVEMENT_SPEED * timestep, map, (Util.CIRCLE * 3 / 4));
-        moveWhileJumping = true;
-        jumpDirection += Direction.LEFT;
-      }
-      if (states['right'] && this.onGround()) {
-        this.walk(MOVEMENT_SPEED * timestep, map, (Util.CIRCLE / 4));
-        moveWhileJumping = true;
-        jumpDirection += Direction.RIGHT;
-      }
-      if (states['forward'] && this.onGround()) {
-        this.walk(MOVEMENT_SPEED * timestep, map, Util.CIRCLE);
-        moveWhileJumping = true;
-        jumpDirection += Direction.FORWARD;
-      }
-      if (states['backward'] && this.onGround()) {
-        this.walk(MOVEMENT_SPEED * timestep, map, (Util.CIRCLE / 2));
-        moveWhileJumping = true;
-        jumpDirection += Direction.BACKWARD;
+      for (var direction in Direction) {
+        if (states[DIRECTION_STATE_TABLE[direction]] && this.onGround()) {
+          this.walk(MOVEMENT_SPEED * timestep, map, DIRECTION_TABLE[direction]);
+          moveWhileJumping = true;
+          jumpDirection += +direction;
+        }
       }
 
       if (states['turnLeft']) {
@@ -152,20 +146,25 @@ module Engine.Player {
       if (states['jump']) {
         if (this.onGround()) {
           this.verticalVelocity = 5;
+          console.log(jumpDirection);
+          console.log(typeof jumpDirection);
           jumpDirection = DIRECTION_TABLE[jumpDirection];
           this.jumpDirection = jumpDirection + this.direction;
-          this.moveWhileJumping = (jumpDirection !== Infinity) ? moveWhileJumping : false;
+          this.moveWhileJumping =
+              (jumpDirection !== Infinity)
+              ? moveWhileJumping
+              : false;
         }
       }
 
       if (!this.onGround()) {
         if (this.moveWhileJumping) {
-          this.move(MOVEMENT_SPEED * timestep, map, this.jumpDirection);
+          this.move(JUMP_SPEED * timestep, map, this.jumpDirection);
         }
       }
 
       this.verticalVelocity -= timestep * 15;
-      this.changeJumpModifier(JUMP_SPEED * timestep * this.verticalVelocity);
+      this.changeJumpModifier(JUMP_HEIGHT * timestep * this.verticalVelocity);
     }
 
     getHeightInformation(): RenderingInformation {
