@@ -9,14 +9,14 @@ module Engine.Player {
   var MOVEMENT_SPEED: number = 2.4;
   var HORIZONTAL_VIEW_SPEED: number = 1.2;
   var VERTICAL_VIEW_SPEED: number = 1000;
+
   var CROUCH_SPEED: number = 500;
   var JUMP_HEIGHT: number = 50;
   var JUMP_SPEED: number = 2;
-  var DEFAULT_HEIGHT: number = 1;
-  //Modularize
+
   var MAX_CROUCH_MOD: number = 0;
-  var MIN_CROUCH_MOD: number = -50;
-  var MAX_JUMP_MOD: number = 1000;
+  var MIN_CROUCH_MOD: number = -25;
+  var MAX_JUMP_MOD: number = Infinity;
   var MIN_JUMP_MOD: number = 0;
   var MAX_VIEW_MOD: number = 1000;
   var MIN_VIEW_MOD: number = -1000;
@@ -58,24 +58,22 @@ module Engine.Player {
     x: number;
     y: number;
     direction: number;
-    playerHeight: number;
+    viewAngle: number;
+
     crouchModifier: number;
     jumpModifier: number;
-    viewModifier: number;
-    jumping: boolean;
+
     moveWhileJumping; boolean;
     jumpDirection: number;
     verticalVelocity: number;
 
-    constructor(x: number, y: number, direction: number,
-        height: number = DEFAULT_HEIGHT) {
+    constructor(x: number, y: number, direction: number) {
       this.x = x;
       this.y = y;
       this.direction = direction;
-      this.playerHeight = height;
       this.crouchModifier = 0;
       this.jumpModifier = 0;
-      this.viewModifier = 0;
+      this.viewAngle = 0;
       this.verticalVelocity = 0;
       this.moveWhileJumping = false;
     }
@@ -109,8 +107,8 @@ module Engine.Player {
       this.jumpModifier = Util.clamp(this.jumpModifier + delta, MIN_JUMP_MOD, MAX_JUMP_MOD);
     }
 
-    private changeViewModifier(delta: number) {
-      this.viewModifier = Util.clamp(this.viewModifier + delta, MIN_VIEW_MOD, MAX_VIEW_MOD);
+    private changeViewAngle(delta: number) {
+      this.viewAngle = Util.clamp(this.viewAngle + delta, MIN_VIEW_MOD, MAX_VIEW_MOD);
     }
 
     update(states: States, map: GameMap, timestep: number): void {
@@ -132,10 +130,10 @@ module Engine.Player {
         this.rotate(HORIZONTAL_VIEW_SPEED * Math.PI * timestep);
       }
       if (states['lookUp']) {
-        this.changeViewModifier(VERTICAL_VIEW_SPEED * timestep);
+        this.changeViewAngle(VERTICAL_VIEW_SPEED * timestep);
       }
       if (states['lookDown']) {
-        this.changeViewModifier(-1 * VERTICAL_VIEW_SPEED * timestep);
+        this.changeViewAngle(-1 * VERTICAL_VIEW_SPEED * timestep);
       }
       if (states['crouch']) {
         this.changeCrouchModifier(-1 * CROUCH_SPEED * timestep);
@@ -169,9 +167,8 @@ module Engine.Player {
 
     getHeightInformation(): RenderingInformation {
       return {
-        crouchModifier: this.crouchModifier,
-        jumpModifier: this.jumpModifier,
-        viewModifier: this.viewModifier
+        heightModifier: this.crouchModifier + this.jumpModifier,
+        viewAngle: this.viewAngle
       };
     }
 
@@ -179,6 +176,4 @@ module Engine.Player {
       return this.jumpModifier === MIN_JUMP_MOD;
     }
   }
-
-
 }

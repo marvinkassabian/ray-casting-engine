@@ -7,7 +7,7 @@ module Engine.Camera {
   import GameMap = Engine.GameMap.GameMap;
   import Util = Engine.Util;
 
-  var CLARITY_FACTOR: number = 1;
+  var CLARITY_FACTOR: number = 0.5;
   var DEFAULT_FOCAL_LENGTH: number = 0.8;
   var DEFAULT_RANGE: number = 10;
   var VERTICAL_BUFFER: number = 3000;
@@ -27,6 +27,9 @@ module Engine.Camera {
     spacing: number;
     focalLength: number;
     range: number;
+    viewAngle: number;
+    cameraHeight: number;
+
 
     constructor(canvas: HTMLCanvasElement, resolution: number,
         focalLength: number = DEFAULT_FOCAL_LENGTH,
@@ -39,14 +42,18 @@ module Engine.Camera {
       this.focalLength = focalLength;
       this.range = range;
       HORIZONTAL_BUFFER = VERTICAL_BUFFER * (this.width / this.height);
+      this.viewAngle = 0;
+      this.cameraHeight = 0;
     }
 
     render(entity: Entity, map: GameMap): void {
-      this.drawSky(entity.direction, map.skybox, entity.getHeightInformation());
+      this.viewAngle = entity.getHeightInformation().viewAngle;
+      this.cameraHeight = entity.getHeightInformation().heightModifier;
+      this.drawSky(entity.direction, map.skybox);
       this.drawColumns(entity, map);
     }
 
-    private drawSky(direction: number, sky: Bitmap, heightInfo: RenderingInformation): void {
+    private drawSky(direction: number, sky: Bitmap): void {
       var width: number = sky.width * (this.height / sky.height) + HORIZONTAL_BUFFER;
       var left: number = (direction / Util.CIRCLE) * -width;
       this.context.save();
@@ -55,9 +62,9 @@ module Engine.Camera {
         this.context.drawImage(
             sky.image, //image
             canvasOffsetX, //canvasOffsetX
-            heightInfo.viewModifier - (VERTICAL_BUFFER / 2) + heightInfo.crouchModifier + heightInfo.jumpModifier, //canvasOffsetY
+            this.viewAngle - (VERTICAL_BUFFER / 2) + this.cameraHeight, //canvasOffsetY
             width, //canvasImageWidth
-            this.height + VERTICAL_BUFFER + heightInfo.crouchModifier + heightInfo.jumpModifier); //canvasImageHeight
+            this.height + VERTICAL_BUFFER + this.cameraHeight); //canvasImageHeight
       }
 
       drawSkyPartial(left);
@@ -73,13 +80,12 @@ module Engine.Camera {
         var x: number = column / this.resolution - 0.5;
         var angle: number = Math.atan2(x, this.focalLength);
         var ray: Step[] = map.cast(entity, entity.direction + angle, this.range);
-        this.drawColumn(column, ray, angle, map, entity.getHeightInformation());
+        this.drawColumn(column, ray, angle, map);
       }
       this.context.restore();
     }
 
-    private drawColumn(column: number, ray: Step[], angle: number, map: GameMap,
-        heightInfo: RenderingInformation): void {
+    private drawColumn(column: number, ray: Step[], angle: number, map: GameMap): void {
       var context: CanvasRenderingContext2D = this.context;
       var texture: Bitmap = map.wallTexture;
       var left: number = Math.floor(column * this.spacing);
@@ -100,9 +106,9 @@ module Engine.Camera {
               1, //width
               texture.height, //height
               left, //canvasOffsetX
-              wall.top + heightInfo.viewModifier + heightInfo.crouchModifier + heightInfo.jumpModifier, //canvasOffsetY
+              wall.top + this.viewAngle + this.cameraHeight, //canvasOffsetY
               width, //canvasImageWidth
-              wall.height + heightInfo.crouchModifier + heightInfo.jumpModifier); //canvasImageHeight
+              wall.height + this.cameraHeight); //canvasImageHeight
         }
       }
     }
